@@ -1,0 +1,151 @@
+---
+name: 📚 ドキュメント改善
+description: ドキュメントの修正や改善を提案してください
+labels: ["documentation", "good first issue"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ドキュメントの改善提案をありがとうございます！
+        わかりやすいドキュメントは、コミュニティ全体の生産性向上につながります。
+
+  - type: dropdown
+    id: doc_type
+    attributes:
+      label: ドキュメントの種類
+      description: 改善対象のドキュメント
+      options:
+        - README.md (メイン)
+        - INSTALLATION.md (インストール)
+        - USAGE.md (使用方法)
+        - FAQ.md (よくある質問)
+        - ハーネス設定ドキュメント
+        - スキル開発ガイド
+        - ミドルウェア開発ガイド
+        - API リファレンス
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: 問題の種類
+      description: どのような問題がありますか？
+      options:
+        - 内容が不正確・古い
+        - 説明が不明確・わかりにくい
+        - 重要な情報が不足している
+        - サンプルコードが動作しない
+        - 翻訳・日本語化が必要
+        - 構成・レイアウトの改善
+        - 新しいセクションの追加
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_problem
+    attributes:
+      label: 現在の問題
+      description: 現在のドキュメントのどこに問題がありますか？
+      placeholder: |
+        例:
+        - INSTALLATION.mdの「環境変数設定」セクションで、GITHUB_TOKENの取得方法が説明されていない
+        - USAGE.mdのカスタムスキル作成例で、import文が不完全で実際に動作しない
+        - ハーネス設定の `middleware` セクションで、実行順序の重要性が説明されていない
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: 改善提案
+      description: どのように改善したいですか？
+      placeholder: |
+        例:
+        ### GitHub Token取得手順の追加
+
+        1. GitHubにログインして Settings > Developer settings > Personal access tokens を開く
+        2. "Generate new token (classic)" をクリック
+        3. 必要な権限を選択：
+           - `repo` (プライベートリポジトリアクセス用)
+           - `read:org` (組織情報読み取り用)
+        4. トークンをコピーして `.env` ファイルに設定
+
+        ### サンプルコードの修正
+
+        ```python
+        # 修正前（動作しない）
+        from skills import Skill
+
+        # 修正後（動作する）
+        from .base import Skill
+        import asyncio
+        ```
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target_audience
+    attributes:
+      label: 対象読者
+      description: この改善はどのような読者を対象にしていますか？
+      options:
+        - 初心者 (AIハーネス初回導入)
+        - 中級者 (基本操作は理解済み)
+        - 上級者 (カスタマイズ・拡張)
+        - 管理者 (企業導入・運用)
+        - 開発者 (コントリビューション)
+        - 全ユーザー
+    validations:
+      required: true
+
+  - type: textarea
+    id: missing_info
+    attributes:
+      label: 不足している情報（該当する場合）
+      description: 追加すべき情報や新しいセクションがあれば記載してください
+      placeholder: |
+        例:
+        - トラブルシューティング: 「スキルが見つからない」エラーの解決方法
+        - パフォーマンス最適化: 大規模プロジェクトでの設定調整
+        - セキュリティ: 企業環境でのベストプラクティス
+        - 統合例: 人気フレームワーク (React, Django, Rails) との連携方法
+
+  - type: textarea
+    id: reference_materials
+    attributes:
+      label: 参考資料（オプション）
+      description: 改善に役立つ参考資料があれば記載してください
+      placeholder: |
+        - 他のオープンソースプロジェクトの優れたドキュメント例
+        - 技術仕様書やAPIドキュメント
+        - 関連するブログ記事や解説動画
+        - ユーザーフィードバックやコミュニティディスカッション
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 貢献意思
+      description: このドキュメント改善に協力していただけますか？
+      options:
+        - label: 自分でプルリクエストを作成したい
+          required: false
+        - label: レビューや検証で協力したい
+          required: false
+        - label: アイデアの提供のみ（実装は他の方にお任せ）
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、改善に役立つ情報があれば記載してください
+      placeholder: |
+        - 対象ドキュメントの具体的な行番号やセクション
+        - 改善による期待効果（新規ユーザーの導入時間短縮等）
+        - 類似の課題を抱えるユーザーの声
+        - 国際化（英語化）の必要性

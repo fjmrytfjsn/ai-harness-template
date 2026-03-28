@@ -1,0 +1,133 @@
+---
+name: 🐛 バグ報告
+description: バグやエラーを報告してください
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AIハーネスのバグ報告をありがとうございます。
+        詳細な情報を提供していただくことで、迅速な解決につながります。
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 事前確認
+      description: バグ報告前に以下を確認してください
+      options:
+        - label: FAQ.mdを確認しました
+          required: true
+        - label: 既存のIssuesを検索しました
+          required: true
+        - label: 最新バージョンで問題が発生することを確認しました
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: ハーネスバージョン
+      description: 使用しているハーネスのバージョンまたはコミットハッシュ
+      placeholder: "v1.0.0 または 7098e5f"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 環境
+      description: 問題が発生した環境
+      options:
+        - ローカル開発環境
+        - CI/CD環境
+        - Docker環境
+        - GitHub Codespaces
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ai_tool
+    attributes:
+      label: 使用AIツール
+      description: 使用しているAIエージェントツール
+      options:
+        - GitHub Copilot CLI
+        - Cursor
+        - VS Code Copilot
+        - その他のAIツール
+        - 不明
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: バグの説明
+      description: 何が起こったのか、何を期待していたのかを明確に説明してください
+      placeholder: |
+        ## 発生した問題
+        コードレビュースキルが実行されず、エラーメッセージが表示される
+
+        ## 期待した動作
+        「コードをレビューして」という指示でcode_reviewスキルが実行される
+
+        ## 実際の動作
+        "Skill not found: code_review" エラーが表示される
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 再現手順
+      description: 問題を再現するための詳細な手順
+      placeholder: |
+        1. プロジェクトディレクトリで `.ai-guidance/harness.yaml` を設定
+        2. GitHub Copilot CLIから「コードをレビューして」を実行
+        3. エラーメッセージが表示される
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: ログ・エラーメッセージ
+      description: 関連するログファイルやエラーメッセージを貼り付けてください
+      placeholder: |
+        .ai-guidance/logs/harness.log からの抜粋:
+
+        ```
+        ERROR: Skill not found: code_review
+        DEBUG: Available skills: []
+        ```
+      render: shell
+
+  - type: textarea
+    id: config
+    attributes:
+      label: 設定ファイル
+      description: harness.yaml の内容（機密情報は削除してください）
+      placeholder: |
+        ```yaml
+        project:
+          name: "my-project"
+          languages: ["Python"]
+
+        skills:
+          enabled_skills:
+            - "code_review"
+        ```
+      render: yaml
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、問題の理解に役立つ情報があれば記載してください
+      placeholder: |
+        - OS: macOS 14.0
+        - Python版本: 3.11.0
+        - Node.js版本: 18.17.0
+        - その他の関連ツール...

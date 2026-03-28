@@ -1,0 +1,76 @@
+name: AI Agent Harness Template
+description: プロダクション対応のAIエージェントハーネス - 次世代ハーネスエンジニアリング基盤
+
+# 新しいリポジトリ作成時の設定
+about:
+  home: https://github.com/your-org/ai-guidance
+  documentation: https://docs.example.com/ai-guidance
+  topics:
+    - ai-agent
+    - harness-engineering
+    - github-copilot
+    - automation
+    - productivity
+    - japanese
+    - template
+    - enterprise
+
+# テンプレート設定
+template:
+  # テンプレートとして提供する
+  is_template: true
+
+  # 含めるファイルパターン
+  include:
+    - .ai-guidance/**
+    - "*.md"
+    - LICENSE
+
+  # 除外するファイルパターン
+  exclude:
+    - .git/**
+    - .github/workflows/template-*
+    - node_modules/**
+    - "*.log"
+
+# ライセンス
+license: MIT
+
+# 主要言語（GitHubが自動検出を補完）
+languages:
+  - Python
+  - YAML
+  - Markdown
+
+# リポジトリ設定の推奨値
+settings:
+  # セキュリティ
+  security:
+    enable_vulnerability_alerts: true
+    enable_automated_security_fixes: true
+
+  # 機能
+  features:
+    enable_issues: true
+    enable_projects: true
+    enable_wiki: true
+    enable_discussions: true
+
+  # プルリクエスト
+  merge_settings:
+    allow_merge_commit: true
+    allow_squash_merge: true
+    allow_rebase_merge: false
+    delete_branch_on_merge: true
+
+  # ブランチ保護（推奨）
+  branch_protection:
+    main:
+      required_status_checks:
+        strict: true
+        contexts: []
+      enforce_admins: false
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+      restrictions: null

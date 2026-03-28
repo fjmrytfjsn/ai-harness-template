@@ -1,0 +1,163 @@
+---
+name: ✨ 機能要望
+description: 新機能や機能改善を提案してください
+labels: ["enhancement", "feature-request"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        新機能のご提案をありがとうございます！
+        詳細な説明により、より良い機能を実装できます。
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 事前確認
+      description: 機能要望前に以下を確認してください
+      options:
+        - label: 既存のissuesや機能リストを確認しました
+          required: true
+        - label: この機能が他の方法では実現できないことを確認しました
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 機能カテゴリ
+      description: 提案する機能のカテゴリ
+      options:
+        - スキル関連
+        - ミドルウェア関連
+        - セキュリティ関連
+        - パフォーマンス関連
+        - ユーザビリティ関連
+        - 統合・連携関連
+        - ドキュメント関連
+        - その他
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      description: この機能の重要度を選択してください
+      options:
+        - 緊急 (現在の作業がブロックされる)
+        - 高 (生産性に大きく影響する)
+        - 中 (あると便利)
+        - 低 (将来的に検討)
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 解決したい問題
+      description: 現在どのような問題に直面していますか？
+      placeholder: |
+        例:
+        - コードレビュー時に特定のフレームワーク（Next.js）固有の問題を検出できない
+        - 大規模なプロジェクトでスキル実行が遅く、開発フローが止まる
+        - チームメンバー間でAI設定が統一されておらず、結果にばらつきがある
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 提案する解決策
+      description: この問題をどのように解決したいですか？
+      placeholder: |
+        例:
+        - Next.js専用のコードレビュースキルを追加
+          - ページルーティングの検証
+          - Static Site Generation (SSG) の最適化チェック
+          - Image最適化の検証
+
+        - パフォーマンス最適化機能
+          - スキルの並列実行
+          - 結果のキャッシュ機能
+          - 段階的実行（重要度順）
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 検討した代替案
+      description: 他にどのような解決方法を検討しましたか？
+      placeholder: |
+        例:
+        - 既存のESLintルールでカバーしようとしたが、AIの文脈理解が必要な部分はカバーできない
+        - 手動でのコードレビューリストを作成したが、プロジェクトごとの差が大きく標準化が困難
+        - 外部ツールとの連携を検討したが、プロジェクト固有の設定との整合性が取れない
+
+  - type: textarea
+    id: use_cases
+    attributes:
+      label: 使用シーン・ユースケース
+      description: この機能をどのような場面で使用しますか？
+      placeholder: |
+        例:
+        - プルリクエスト作成時の自動レビュー
+        - CI/CD パイプラインでの品質ゲート
+        - 新メンバーのオンボーディング時の学習支援
+        - 月次の技術債務分析レポート生成
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: 実装アイデア（オプション）
+      description: 技術的な実装のアイデアがあれば記載してください
+      placeholder: |
+        例:
+        ```yaml
+        # 新しいスキル設定
+        skills:
+          nextjs_analyzer:
+            triggers:
+              - "Next.js"
+              - "ページルーティング"
+            checks:
+              - "dynamic_routes"
+              - "static_generation"
+              - "image_optimization"
+        ```
+
+        ```python
+        # 新しいミドルウェア
+        class CacheMiddleware(BaseMiddleware):
+            async def wrap_tool_call(self, call_func, tool_name, *args, **kwargs):
+                cache_key = self.generate_cache_key(tool_name, args, kwargs)
+                if cached_result := self.cache.get(cache_key):
+                    return cached_result
+                # ...
+        ```
+      render: markdown
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: 受け入れ基準
+      description: この機能が完成したと判断する基準を記載してください
+      placeholder: |
+        例:
+        - [ ] Next.jsプロジェクトで「コードをレビューして」実行時にNext.js固有のチェックが動作する
+        - [ ] 動的ルーティング (`pages/[id].js`) の問題を正しく検出する
+        - [ ] `next/image` の最適化不足を指摘する
+        - [ ] パフォーマンス向上により実行時間が50%以上短縮される
+        - [ ] 設定ドキュメントが更新される
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、実装に役立つ情報があれば記載してください
+      placeholder: |
+        - 参考となるツールやライブラリ
+        - 関連する技術仕様書やドキュメント
+        - 既に試作したコードやアイデア
+        - この機能を必要とするチームメンバーの数

@@ -1,0 +1,89 @@
+name: "commit_message"
+description: "git変更から従来型コミットメッセージを生成"
+version: "1.0.0"
+
+triggers:
+  - "コミット"
+  - "コミットメッセージ"
+  - "従来型コミット"
+  - "コミット生成"
+
+dependencies:
+  - "git"
+
+# 従来型コミット形式
+templates:
+  conventional:
+    format: "{type}({scope}): {description}"
+
+    types:
+      feat: "新機能"
+      fix: "バグ修正"
+      docs: "ドキュメントのみの変更"
+      style: "コードの意味に影響しない変更"
+      refactor: "バグ修正も機能追加もしないコード変更"
+      perf: "パフォーマンスを改善するコード変更"
+      test: "不足テストの追加や既存テストの修正"
+      chore: "ビルドプロセスや補助ツールへの変更"
+      ci: "CI設定ファイルとスクリプトへの変更"
+      build: "ビルドシステムや外部依存関係に影響する変更"
+      revert: "以前のコミットを元に戻す"
+
+# 設定
+configuration:
+  max_subject_length: 50
+  max_body_line_length: 72
+  require_body_for_breaking: true
+  include_co_author: true
+  co_author_line: "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+
+# コンテキスト要件
+execution:
+  type: "template_based"
+  context_required:
+    - "git_diff"
+    - "staged_files"
+    - "project_type"
+
+  analysis_rules:
+    # 変更に基づいてコミットタイプを決定
+    type_detection:
+      feat:
+        - "src/内の新ファイル"
+        - "関数追加"
+        - "新機能"
+      fix:
+        - "バグ修正"
+        - "修正済み"
+        - "解決"
+      docs:
+        - "README"
+        - ".mdファイル"
+        - "ドキュメント"
+      test:
+        - "test/"
+        - "spec/"
+        - ".test."
+      refactor:
+        - "リファクタリング"
+        - "再構築"
+      style:
+        - "フォーマット"
+        - "空白"
+        - "セミコロン"
+
+# 例
+examples:
+  simple:
+    - "feat: ユーザー認証機能を追加"
+    - "fix: ログインボタンのスタイルを修正"
+    - "docs: API ドキュメントを更新"
+
+  with_scope:
+    - "feat(auth): OAuth統合を追加"
+    - "fix(ui): ボタンの位置揃えを修正"
+    - "test(api): エンドポイント検証テストを追加"
+
+  breaking_changes:
+    - "feat!: 非推奨APIエンドポイントを削除"
+    - "refactor!: データベーススキーマを更新"

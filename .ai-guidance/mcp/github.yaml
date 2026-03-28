@@ -1,0 +1,41 @@
+name: "github"
+description: "MCP経由のGitHubリポジトリ統合"
+command: "github-mcp-server"
+
+capabilities:
+  tools:
+    - search_repositories
+    - get_file_contents
+    - list_issues
+    - list_pull_requests
+    - search_code
+    - create_pull_request
+    - get_commit
+    - list_commits
+
+  resources:
+    - repository_structure
+    - issue_templates
+    - workflow_definitions
+    - branch_information
+
+authentication:
+  type: "github_token"
+  token_env: "GITHUB_TOKEN"
+
+configuration:
+  default_owner: "your-org"
+  rate_limit: 5000
+  cache_ttl: 300
+
+security:
+  sandbox: true
+  allowed_operations:
+    - read_repository
+    - search_code
+    - list_issues
+    - create_pull_request
+  forbidden_operations:
+    - delete_repository
+    - force_push
+    - modify_secrets

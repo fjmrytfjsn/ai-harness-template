@@ -1,0 +1,35 @@
+name: "playwright"
+description: "Playwright MCP経由のWeb自動化"
+command: "npx"
+args: ["@playwright/mcp@latest", "--headless"]
+
+capabilities:
+  tools:
+    - navigate_to_page
+    - extract_text
+    - take_screenshot
+    - fill_form
+    - click_element
+    - scroll_page
+    - wait_for_element
+
+security:
+  sandbox: true
+  allowed_domains:
+    - "*.github.com"
+    - "*.stackoverflow.com"
+    - "*.docs.*"
+    - "*.wikipedia.org"
+  blocked_domains:
+    - "*.ads.*"
+    - "*.tracker.*"
+    - "*.facebook.com"
+    - "*.twitter.com"
+
+configuration:
+  timeout: 30000
+  headless: true
+  user_agent: "AI-Agent-Browser/1.0"
+  viewport:
+    width: 1280
+    height: 720

@@ -1,0 +1,131 @@
+# AI エージェント ハーネス設定
+# エージェント = モデル + ハーネス
+
+project:
+  name: "ai-guidance"
+  type: "template"
+  description: "モダンAIエージェントハーネステンプレート"
+
+# ハーネスアーキテクチャ
+harness:
+  framework: "langchain-deepagents"  # または "autogen" | "custom"
+
+  # エージェントループの核
+  agent_loop:
+    max_iterations: 50
+    timeout_seconds: 300
+    enable_self_verification: true
+    enable_parallel_tools: true
+
+# ミドルウェアスタック（順序重要）
+middleware:
+  stack:
+    - "security"      # PII検出、アクセス制御
+    - "context"       # コンテキスト管理、要約
+    - "memory"        # 永続的知識管理
+    - "tools"         # 動的ツール読み込み・ルーティング
+    - "monitoring"    # 使用状況追跡、パフォーマンス測定
+
+  # ミドルウェア設定
+  security:
+    pii_detection: true
+    content_moderation: true
+    access_controls: true
+
+  context:
+    max_tokens: 128000
+    summarization_threshold: 100000
+    offload_strategy: "smart"
+
+  memory:
+    persistence: "filesystem"
+    base_path: "./memory/"
+    enable_semantic_search: false
+
+  tools:
+    dynamic_loading: true
+    parallel_execution: true
+    sandbox_mode: true
+
+# 動的スキルシステム
+skills:
+  loading: "dynamic"  # "static" | "dynamic" | "auto"
+  confidence_threshold: 0.7
+  max_concurrent: 5
+
+  discovery_paths:
+    - "./skills/"
+    - "~/.ai-skills/"
+
+  # よく使うスキルを自動読み込み
+  preload:
+    - "filesystem_ops"
+    - "git_operations"
+
+# MCP統合
+mcp:
+  enabled: true
+
+  # 自動起動サーバー
+  servers:
+    - name: "github"
+      auto_start: true
+
+    - name: "filesystem"
+      auto_start: true
+
+    - name: "playwright"
+      auto_start: false  # オンデマンド読み込み
+
+  # 接続設定
+  settings:
+    timeout: 30
+    retry_attempts: 3
+    connection_pool_size: 5
+
+  # セキュリティ
+  security:
+    enforce_sandboxing: true
+    allow_network_access: false
+
+# 自律実行
+autonomous:
+  planning:
+    enabled: true
+    max_subtasks: 20
+
+  verification:
+    enabled: true
+    test_execution: true
+    code_review: true
+
+  continuation:
+    enabled: true
+    state_persistence: true
+
+# パフォーマンス最適化
+performance:
+  caching:
+    enabled: true
+    ttl: 300
+
+  compression:
+    enabled: false
+
+  rate_limiting:
+    enabled: false
+
+# 開発 vs 本番
+environment:
+  mode: "development"  # "development" | "staging" | "production"
+
+  development:
+    verbose_logging: true
+    safety_checks: true
+    human_confirmation: true
+
+  production:
+    verbose_logging: false
+    safety_checks: true
+    human_confirmation: false
+    monitoring: true

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 GitHub Discussions
+    url: https://github.com/your-org/ai-guidance/discussions
+    about: 質問、アイデア共有、コミュニティディスカッション
+  - name: 📖 ドキュメント
+    url: https://docs.example.com/ai-guidance
+    about: 詳細な使用方法とAPIリファレンス
+  - name: 🎓 チュートリアル
+    url: https://github.com/your-org/ai-guidance-examples
+    about: 実用的な使用例とベストプラクティス
