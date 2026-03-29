@@ -62,16 +62,41 @@ code my-project
 **完全自動セットアップ完了！**
 - ✅ **プロジェクト初期化済み** - GitHubユーザー名で自動設定
 - ✅ **OpenCode Web 利用可能** - ポート3000で即アクセス
+- ✅ **AI Harness Dashboard 起動** - ポート8000でリアルタイム監視
 - ✅ **AI Harness スキル有効** - 高度なコードレビュー等利用可能
 - ✅ **認証エラー対策済み** - QUICK_FIX.md で即解決
 
 **利用方法:**
 ```bash
-# VS Code の 'PORTS' タブ → ポート 3000 → "Open in Browser"
-# OpenCode Web が開いたらすぐにAIコーディング可能！
+# VS Code の 'PORTS' タブから各サービスにアクセス:
+# ポート 3000: OpenCode Web (AI コーディング)
+# ポート 8000: AI Harness Dashboard (監視・管理)
 ```
 
-### 4. 高度な機能をフル活用
+### 4. 📊 AI Harness Dashboard
+
+**リアルタイム監視・管理機能:**
+- 🏃 **システム状態**: 稼働時間、リクエスト数、エラー率
+- ⚡ **ハーネス情報**: スキル数、ミドルウェア数、設定状況
+- 📈 **パフォーマンス**: レスポンス時間、メモリ使用量
+- 📋 **アクティビティログ**: リアルタイム操作履歴
+
+**Dashboard管理コマンド:**
+```bash
+# Dashboard 起動
+./scripts/dashboard.sh start
+
+# 状態確認  
+./scripts/dashboard.sh status
+
+# ログ確認
+./scripts/dashboard.sh logs
+
+# ブラウザで開く
+./scripts/dashboard.sh open
+```
+
+### 5. 高度な機能をフル活用
 
 **OpenCode Web から:**
 ```
