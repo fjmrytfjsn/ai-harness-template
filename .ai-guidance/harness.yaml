@@ -10,12 +10,6 @@ project:
   version: "1.0.0"
   authors: ["{{AUTHOR_NAME}}"]     # TODO: 作成者名を記入してください
   repository: "{{REPOSITORY_URL}}" # TODO: リポジトリURLを記入してください
-  
-  # テンプレートバージョン情報（更新システム用）
-  template:
-    source: "https://github.com/fjmrytfjsn/ai-harness-template"
-    version: "v1.0.0"
-    last_updated: "2024-12-26"
 
 # ハーネスアーキテクチャ
 harness:
