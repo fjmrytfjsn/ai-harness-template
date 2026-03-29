@@ -12,17 +12,6 @@
 
 従来のコンテキストエンジニアリングから**ハーネスエンジニアリング**へ。プロジェクト固有のAI機能を高速・安全・効率的に実現します。
 
-## ⚠️ 重要: AI プロバイダー設定について
-
-**デフォルトでは AI プロバイダーは未設定です**。OpenCode Web を使用するには以下のいずれかを設定してください：
-
-1. **OpenAI API キー** を設定（最も簡単）
-2. **Personal Access Token** を設定（GitHub Copilot 利用）
-3. **ローカル LLM**（Ollama等）を設定（オフライン）
-
-**🚨 緊急対応**: `QUICK_FIX.md` でワンライナー設定方法を確認してください  
-→ 詳細手順: [プロバイダー設定ガイド](docs/OPENCODE_INTEGRATION.md#🔧-トラブルシューティング)
-
 ## ⚡ クイックスタート
 
 ### 1. このテンプレートを使用
@@ -31,278 +20,87 @@
 1. [Use this template](https://github.com/fjmrytfjsn/ai-harness-template) ボタンをクリック
 2. 新しいリポジトリ名を入力
 3. "Create repository from template" をクリック
+4. **"Open in Codespaces"** をクリック（自動セットアップ開始）
 
-**GitHub CLI:**
+### 2. 初期設定（1分で完了）
+
+Codespaces起動後、以下が自動実行されます：
+- ✅ プロジェクト設定・初期化
+- ✅ 依存関係インストール  
+- ✅ OpenCode Web 起動
+- ⚠️ **AI プロバイダー設定が必要** → `QUICK_FIX.md` 参照
+
+### 3. AIプロバイダー設定
+
 ```bash
-gh repo create my-project --template fjmrytfjsn/ai-harness-template
-cd my-project
+# OpenAI使用（最も簡単）
+echo "OPENAI_API_KEY=sk-your-key" > .env
+sed -i 's/default: null/default: "openai"/' .ai-guidance/opencode-integration.yaml
 ```
 
-### 2. 開発環境を起動
+### 4. 即座に利用開始
 
-**GitHub Codespaces（推奨）:**
-1. リポジトリページで "Code" → "Codespaces" → "Create codespace"
-2. **環境が完全自動セットアップされます**（約2-3分）
-   - OpenCode Web 自動インストール・起動
-   - AI Harness プロジェクト自動初期化
-   - 全ての依存関係自動インストール
-3. **即座に利用開始可能** - 追加設定不要！
+- 📱 VS Code「PORTS」タブ → ポート3000でOpenCode Web
+- 🤖 AI支援コーディング開始
+- 📊 ポート8080でDashboard監視
 
-**ローカル Dev Container:**
-```bash
-# VS Code でリポジトリを開く
-code my-project
-# Ctrl+Shift+P → "Dev Containers: Reopen in Container"
-```
+## ✨ 主な機能
 
-### 3. 🎉 すぐに AI コーディング開始！
+### 🤖 AI エージェントハーネス
+- **動的スキルシステム**: コードレビュー・ファイル解析・コミットメッセージ生成
+- **ミドルウェアスタック**: セキュリティ・ログ・パフォーマンス
+- **MCP統合**: GitHub/Playwright等の標準化ツール連携
 
-**完全自動セットアップ完了！**
-- ✅ **プロジェクト初期化済み** - GitHubユーザー名で自動設定
-- ✅ **OpenCode Web 利用可能** - ポート3000で即アクセス
-- ✅ **AI Harness Dashboard 起動** - ポート8000でリアルタイム監視
-- ✅ **AI Harness スキル有効** - 高度なコードレビュー等利用可能
-- ✅ **認証エラー対策済み** - QUICK_FIX.md で即解決
+### 📊 リアルタイム監視
+- **AI Harness Dashboard**: システム状態・メトリクス・ログ
+- **プロジェクト分析**: ファイル構造・依存関係・品質指標
+- **パフォーマンス追跡**: レスポンス時間・使用量・エラー率
 
-**利用方法:**
-```bash
-# VS Code の 'PORTS' タブから各サービスにアクセス:
-# ポート 3000: OpenCode Web (AI コーディング)
-# ポート 8000: AI Harness Dashboard (監視・管理)
-```
+### 🌐 OpenCode Web 統合
+- **ブラウザベース開発**: VS Code不要の AI コーディング
+- **マルチプロバイダー対応**: OpenAI/Anthropic/Ollama/GitHub Copilot
+- **カスタムコマンド**: プロジェクト固有AI機能の統合
 
-### 4. 📊 AI Harness Dashboard
+### 🔄 安全な更新システム
+- **テンプレート更新**: 新機能の自動取り込み
+- **バックアップ・ロールバック**: 安全な実験環境
+- **競合解決**: インテリジェントなマージ戦略
 
-**リアルタイム監視・管理機能:**
-- 🏃 **システム状態**: 稼働時間、リクエスト数、エラー率
-- ⚡ **ハーネス情報**: スキル数、ミドルウェア数、設定状況
-- 📈 **パフォーマンス**: レスポンス時間、メモリ使用量
-- 📋 **アクティビティログ**: リアルタイム操作履歴
+## 📋 詳細ドキュメント
 
-**Dashboard管理コマンド:**
-```bash
-# Dashboard 起動
-./scripts/dashboard.sh start
+テンプレート使用後、詳細ガイドは `.template/` ディレクトリ内で確認できます：
 
-# 状態確認  
-./scripts/dashboard.sh status
+- 📖 [インストールガイド](.template/INSTALLATION.md)
+- 🛠️ [使用方法](.template/USAGE.md)
+- ❓ [FAQ](.template/FAQ.md)
+- 📊 [Dashboard ガイド](.template/docs/DASHBOARD.md)
+- 🔧 [OpenCode統合](.template/docs/OPENCODE_INTEGRATION.md)
 
-# ログ確認
-./scripts/dashboard.sh logs
+## 🛡️ セキュリティ・プライバシー
 
-# ブラウザで開く
-./scripts/dashboard.sh open
-```
+- 🔒 **PII検出**: 個人情報の自動フィルタリング
+- 🛡️ **セキュアミドルウェア**: 入力検証・出力サニタイズ
+- 📝 **ログ管理**: センシティブ情報の適切な除外
+- 🔑 **認証**: 各プロバイダーの安全な認証フロー
 
-### 5. 高度な機能をフル活用
+## 🌟 企業・チーム利用
 
-**OpenCode Web から:**
-```
-このプロジェクトのコードをレビューして
-コミットメッセージを生成して  
-セキュリティ問題をチェックして
-```
+- 👥 **マルチユーザー対応**: チーム開発環境
+- 📊 **使用量追跡**: コスト管理・分析
+- 🔧 **カスタマイズ**: 企業固有要件への対応
+- 🚀 **スケーラビリティ**: 大規模プロジェクト対応
 
-**AI Harness スキルも自動利用可能:**
-- 🔍 高度コードレビュー（セキュリティ・パフォーマンス分析）
-- 📝 従来型コミットメッセージ生成
-- 📊 ファイル品質分析（AST解析）
-  name: "my-project"
-  type: "web_development"  # ツール選択やミドルウェアに影響
+## 🤝 コミュニティ・サポート
 
-harness:
-  middleware: ["context", "tools", "memory", "security"]
-  skills:
-    loading: "dynamic"  # スキルをオンデマンドで読み込み
-  mcp:
-    enabled: true
-    servers: ["github", "playwright"]
-```
+- 💬 **Issues**: バグ報告・機能要望
+- 📢 **Discussions**: 使用方法・ベストプラクティス
+- 🔄 **Pull Requests**: 機能改善・修正の貢献
+- 📖 **Wiki**: コミュニティドキュメント
 
-## ディレクトリ構成
+## 📄 ライセンス
 
-```
-.ai-guidance/
-├── harness.yaml           # メイン設定
-├── middleware/            # ミドルウェアコンポーネント
-├── skills/               # 動的スキル
-├── mcp/                  # MCP統合
-└── memory/               # 永続的な知識
-```
-
-## 主要コンポーネント
-
-### 🔧 **ミドルウェアシステム**
-エージェント実行の各段階でのフック：
-- `before_agent`: セットアップとコンテキスト読み込み
-- `before_model`: コンテキスト最適化、PII検出
-- `wrap_tool_call`: ツールルーティング、セキュリティ、検証
-- `after_model`: レスポンス処理、人間参加型
-- `after_agent`: クリーンアップ、通知、記憶の永続化
-
-### 🧩 **動的スキル**
-コンテキスト汚染を防ぐためにオンデマンドで機能を読み込み：
-- コードレビューと解析
-- ドキュメント生成
-- コミットメッセージ作成
-- テストと検証
-- カスタムプロジェクトワークフロー
-
-### 🔌 **MCP統合**
-外部ツール接続の標準プロトコル：
-- GitHub: リポジトリ操作
-- Playwright: Web自動化
-- ファイルシステム: 安全なファイル操作
-- カスタム: プロジェクト固有ツール
-
-### 🧠 **スマートメモリ**
-多層メモリシステム：
-- **作業用**: 現在のコンテキストウィンドウ
-- **セッション**: 一時的な知識
-- **永続的**: 長期間のプロジェクト知識
-- **スキル**: 再利用可能なパターンとテンプレート
-
-## 設定
-
-### 最小設定
-```yaml
-# harness.yaml - 最小構成
-project:
-  name: "simple-project"
-
-harness:
-  middleware: ["context", "tools"]
-  skills:
-    loading: "auto"  # 必要なスキルを自動検出・読み込み
-```
-
-### フル機能設定
-```yaml
-# harness.yaml - 本番構成
-project:
-  name: "enterprise-project"
-  type: "full_stack"
-
-harness:
-  framework: "langchain-deepagents"
-
-  middleware:
-    stack: ["security", "context", "memory", "tools", "monitoring"]
-
-  skills:
-    loading: "dynamic"
-    confidence_threshold: 0.8
-    discovery_paths: ["./skills/", "~/.ai-skills/"]
-
-  mcp:
-    enabled: true
-    servers: ["github", "playwright", "project_analyzer"]
-
-  memory:
-    persistence: "filesystem"
-    semantic_search: true
-
-  autonomous:
-    planning: true
-    self_verification: true
-    long_horizon: true
-```
-
-## 使用パターン
-
-### 1. **開発ワークフロー**
-```python
-# エージェントが必要なスキルとツールを自動読み込み
-agent = HarnessAgent.from_config(".ai-guidance/harness.yaml")
-
-# コンテキストに基づいてスキルを動的読み込み
-await agent.run("最近のコード変更をレビューして")  # -> code_review スキルを読み込み
-await agent.run("コミットメッセージを生成して")         # -> commit_message スキルを読み込み
-await agent.run("ドキュメントを更新して")           # -> docs_generation スキルを読み込み
-```
-
-### 2. **カスタムミドルウェア**
-```python
-# project_middleware.py
-@middleware("project_context")
-class ProjectContextMiddleware:
-    def before_agent(self, context):
-        context.add_project_info(self.analyze_project())
-
-    def wrap_tool_call(self, tool_call, context):
-        # プロジェクト固有の検証を追加
-        return self.validate_and_execute(tool_call)
-```
-
-### 3. **カスタムスキル**
-```python
-# skills/deploy.py
-@skill(
-    triggers=["デプロイ", "配備", "公開"],
-    dependencies=["docker", "kubernetes"]
-)
-async def deploy_application(target="staging", **kwargs):
-    # デプロイロジックをここに
-    return DeploymentResult(...)
-```
-
-## パフォーマンス最適化
-
-- **🚀 動的読み込み**: 必要なコンポーネントのみ読み込み
-- **⚡ 並列実行**: 複数ツールの同時実行
-- **💾 スマートキャッシング**: 高コスト処理のキャッシュ
-- **📊 コンテキスト管理**: 自動要約とオフロード
-- **🔄 コネクションプーリング**: MCP接続の再利用
-
-## セキュリティ
-
-- **🛡️ サンドボックス実行**: 外部ツールの隔離実行
-- **🔒 PII検出**: 個人情報の自動検出と削除
-- **✅ アクセス制御**: 細かい権限管理
-- **📝 監査ログ**: 完全な操作履歴
-
-## 従来手法からの移行
-
-### AGENTS.md から
-```yaml
-# 従来の AGENTS.md の境界がミドルウェア設定に
-harness:
-  middleware:
-    security:
-      forbidden_operations: ["rm -rf", "sudo"]
-      require_confirmation: ["git push --force"]
-```
-
-### 静的指示から
-```yaml
-# 動的スキルが静的指示を置き換え
-skills:
-  code_review:
-    style_guide: "pep8"
-    security_checks: true
-
-  commit_message:
-    format: "conventional"
-    max_length: 50
-```
-
-## アーキテクチャの利点
-
-### 従来のコンテキストエンジニアリング vs ハーネスエンジニアリング
-| 側面 | コンテキストエンジニアリング | ハーネスエンジニアリング |
-|------|---------------------------|------------------------|
-| **アプローチ** | 静的プロンプト最適化 | 動的システムオーケストレーション |
-| **スケーラビリティ** | コンテキストウィンドウで制限 | 動的読み込みで無制限 |
-| **保守性** | 手動プロンプト更新 | 自動コンポーネント管理 |
-| **統合** | ツール毎にカスタム実装 | MCP による標準化 |
-| **パフォーマンス** | 複雑さで劣化 | 複雑さでスケール |
-
-### 実世界での影響
-- **トークン効率**: コンテキスト使用量 70% 削減
-- **応答速度**: 並列ツール実行で 3倍高速化
-- **保守性**: 手動設定 80% 削減
-- **信頼性**: 自己検証とエラー復旧
+MIT License - 商用利用・再配布・改変すべて自由
 
 ---
 
-**本番対応**: このハーネスはエンタープライズグレードの信頼性、セキュリティ、パフォーマンスを備えた実世界の AI エージェントデプロイメント向けに設計されています。
+🚀 **今すぐ始める**: [Use this template](https://github.com/fjmrytfjsn/ai-harness-template) → Codespaces → 1分でAI開発環境完成！

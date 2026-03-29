@@ -49,10 +49,15 @@ if [ -f ".ai-guidance/harness.yaml" ]; then
     fi
 fi
 
-# README.md のプロジェクト名を更新
+# README.md をプロジェクト用テンプレートに置き換え
+if [ -f ".template/PROJECT_README_TEMPLATE.md" ]; then
+    cp .template/PROJECT_README_TEMPLATE.md README.md
+fi
+
+# README.md のプロジェクト名とプレースホルダーを更新
 if [ -f "README.md" ]; then
-    sed -i "1s/.*/# $PROJECT_NAME/" README.md
-    sed -i "s/AI エージェントハーネス テンプレート/$PROJECT_NAME/g" README.md
+    sed -i "s/{{PROJECT_NAME}}/$PROJECT_NAME/g" README.md
+    sed -i "s/{{PROJECT_DESCRIPTION}}/$PROJECT_DESCRIPTION/g" README.md
 fi
 
 # package.json があれば更新
@@ -103,12 +108,11 @@ echo ""
 
 # テンプレート固有ファイルの削除
 echo "🗑️ テンプレート固有ファイルを削除中..."
-rm -f TEMPLATE_CLEANUP.md 2>/dev/null
+rm -rf .template/ 2>/dev/null
 rm -f scripts/comprehensive-test.sh 2>/dev/null
 rm -f scripts/update-template.sh 2>/dev/null
 rm -f .template-backups/.gitkeep 2>/dev/null
 rmdir .template-backups 2>/dev/null
-rm -f VERSION.md 2>/dev/null
 # QUICK_FIX.md は初回プロバイダー設定まで保持
 
 echo "✅ テンプレート固有ファイル削除完了"

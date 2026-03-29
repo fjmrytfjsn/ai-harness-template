@@ -136,6 +136,8 @@ pip install -r .ai-guidance/requirements.txt
 
 ---
 
+**詳細ドキュメント**: [OpenCode Integration Guide](.template/docs/OPENCODE_INTEGRATION.md)
+
 **📝 このファイルについて**: このQUICK_FIX.mdはテンプレート固有のガイドファイルです。プロバイダー設定が完了したら削除してかまいません。
 
 ```bash
