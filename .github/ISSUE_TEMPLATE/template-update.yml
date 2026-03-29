@@ -1,0 +1,131 @@
+name: Template Update Notification
+description: テンプレートアップデートが利用可能になったときの通知
+title: "[UPDATE] AI Harness Template v{{ template_version }} が利用可能です"
+labels: ["template-update", "notification"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎉 新しいテンプレートバージョンが利用可能です！
+
+        AI Harness Template の新バージョンがリリースされました。以下の手順で安全にアップデートできます。
+
+  - type: input
+    id: current_version
+    attributes:
+      label: 現在のバージョン
+      description: プロジェクトで現在使用しているテンプレートバージョン
+      placeholder: "例: v1.0.0"
+    validations:
+      required: true
+
+  - type: input  
+    id: target_version
+    attributes:
+      label: アップデート先バージョン
+      description: 最新の利用可能バージョン
+      placeholder: "例: v1.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: update_type
+    attributes:
+      label: アップデートタイプ
+      description: セマンティックバージョニングに基づくアップデートの種類
+      options:
+        - PATCH (バグ修正・セキュリティ更新)
+        - MINOR (新機能追加・後方互換)
+        - MAJOR (破壊的変更・マイグレーション必要)
+    validations:
+      required: true
+
+  - type: textarea
+    id: changelog
+    attributes:
+      label: 主な変更点
+      description: 新バージョンでの重要な変更・新機能
+      placeholder: |
+        例:
+        - 🆕 新機能: AI Harness Dashboard の性能向上
+        - 🐛 バグ修正: OpenCode Web 401認証エラーの解決
+        - 🔒 セキュリティ: 依存関係の更新
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: breaking_changes
+    attributes:
+      label: 破壊的変更 (もしあれば)
+      description: 既存の動作に影響する変更
+      placeholder: |
+        破壊的変更がある場合のみ記入:
+        - 設定ファイルの形式変更
+        - 削除された機能
+        - 互換性のない変更
+      render: markdown
+
+  - type: checkboxes
+    id: update_checklist
+    attributes:
+      label: アップデート前チェックリスト
+      description: 安全なアップデートのための確認事項
+      options:
+        - label: 全ての変更をコミット済み
+          required: true
+        - label: 重要なファイルをバックアップ済み
+          required: false
+        - label: テスト環境で先行検証済み
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 📋 推奨アップデート手順
+
+        ### 🚀 自動アップデート（推奨）
+        ```bash
+        # 1. 現在の作業を保存
+        git add .
+        git commit -m "update前の作業保存"
+
+        # 2. アップデート実行
+        ./scripts/update-template.sh update
+
+        # 3. 動作確認
+        ./scripts/dashboard.sh status
+        ```
+
+        ### 🔧 手動アップデート
+        詳細手順は [Update Guide](docs/UPDATE_GUIDE.md) を参照してください。
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🆘 トラブルシューティング
+
+        アップデートで問題が発生した場合:
+
+        1. **バックアップからの復元**:
+           ```bash
+           ./scripts/update-template.sh rollback
+           ```
+
+        2. **ヘルプの取得**:
+           - [Update Guide](docs/UPDATE_GUIDE.md)
+           - [GitHub Discussions](https://github.com/fjmrytfjsn/ai-harness-template/discussions)
+           - [Issues](https://github.com/fjmrytfjsn/ai-harness-template/issues)
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: 追加メモ
+      description: プロジェクト固有の注意事項や追加情報
+      placeholder: |
+        例:
+        - カスタムスキルの互換性確認が必要
+        - 特定の設定項目の見直しが推奨
+        - チームメンバーへの通知が必要
