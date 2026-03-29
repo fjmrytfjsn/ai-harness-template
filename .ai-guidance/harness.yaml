@@ -2,9 +2,14 @@
 # エージェント = モデル + ハーネス
 
 project:
-  name: "ai-guidance"
-  type: "template"
-  description: "モダンAIエージェントハーネステンプレート"
+  name: "{{PROJECT_NAME}}"          # TODO: プロジェクト名に変更してください
+  type: "application"              # テンプレートから作成されたプロジェクト
+  description: "{{PROJECT_DESCRIPTION}}"  # TODO: プロジェクトの説明を記入してください
+  
+  # プロジェクト設定（必要に応じて変更）
+  version: "1.0.0"
+  authors: ["{{AUTHOR_NAME}}"]     # TODO: 作成者名を記入してください
+  repository: "{{REPOSITORY_URL}}" # TODO: リポジトリURLを記入してください
 
 # ハーネスアーキテクチャ
 harness:
