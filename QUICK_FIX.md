@@ -1,8 +1,8 @@
-# 🚨 緊急時対応ガイド - OpenCode Web 401エラー
+# 🚨 緊急時対応ガイド - プロバイダー未設定 / 401エラー
 
-## 問題: OpenCode Web で「401 Unauthorized」エラー
+## 前提: デフォルトではプロバイダー未設定
 
-GitHub Codespaces でテンプレートを開いた後、OpenCode Web（ポート3000）にアクセスすると401エラーが発生する。
+このテンプレートはデフォルトでプロバイダーが未設定です。OpenCode Web を使用するには、以下のいずれかを設定してください。
 
 ## 🎯 即座に実行できる解決策
 
@@ -15,11 +15,10 @@ OPENAI_API_KEY=sk-your-actual-openai-api-key-here
 EOF
 
 # 2. プロバイダー設定を変更
-sed -i 's/default_provider: "github-copilot"/default_provider: "openai"/' .ai-guidance/opencode-integration.yaml
+sed -i 's/default: null/default: "openai"/' .ai-guidance/opencode-integration.yaml
 
 # 3. OpenCode Web を再起動
-pkill -f "opencode-ai"
-npx opencode-ai web --port 3000 &
+# VS Code の「PORTS」タブ → ポート3000 → 再読み込み
 ```
 
 ### 解決策2: ローカル LLM を使用（オフライン・無料）
@@ -33,30 +32,18 @@ ollama serve &
 ollama pull deepseek-coder:6.7b
 
 # 3. プロバイダー設定変更
-cat > .ai-guidance/opencode-integration.yaml << 'EOF'
-providers:
+sed -i 's/default: null/default: "ollama"/' .ai-guidance/opencode-integration.yaml
+
+# Ollamaプロバイダー詳細を追加
+cat >> .ai-guidance/opencode-integration.yaml << 'EOF'
+
+  # Ollama ローカル LLM 設定
   ollama:
     name: "Ollama Local"
     base_url: "http://localhost:11434"
     models: ["deepseek-coder:6.7b"]
     auth: "none"
-
-default_provider: "ollama"
-default_model: "deepseek-coder:6.7b"
-
-harness_integration:
-  enabled: true
-  skills_path: ".ai-guidance/skills"
-  custom_commands:
-    - name: "🔍 Code Review"
-      command: "python .ai-guidance/skills/code_review.py"
-    - name: "📝 Commit Message"  
-      command: "python .ai-guidance/skills/commit_message.py"
 EOF
-
-# 4. OpenCode Web 再起動
-pkill -f "opencode-ai"
-npx opencode-ai web --port 3000 &
 ```
 
 ### 解決策3: Personal Access Token 設定（GitHub 機能最大活用）
@@ -71,15 +58,14 @@ cat > .env << 'EOF'
 GITHUB_TOKEN=ghp_your_personal_access_token_here
 EOF
 
-# 3. GitHub CLI で認証
+# 3. プロバイダー設定変更
+sed -i 's/default: null/default: "github-copilot"/' .ai-guidance/opencode-integration.yaml
+
+# 4. GitHub CLI で認証
 gh auth login --with-token < .env
 
-# 4. Copilot API 有効確認
+# 5. Copilot API 有効確認
 gh api user/copilot/billing
-
-# 5. OpenCode Web 再起動
-pkill -f "opencode-ai"  
-npx opencode-ai web --port 3000 &
 ```
 
 ## 📊 設定確認

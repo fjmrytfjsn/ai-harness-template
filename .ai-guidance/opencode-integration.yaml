@@ -2,8 +2,8 @@
 
 # OpenCode プロバイダー設定
 providers:
-  # デフォルト: GitHub Copilot
-  default: "github-copilot"
+  # デフォルト: 未設定（ユーザーが選択するまで無効）
+  default: null
   
   # 利用可能なプロバイダー
   available:
@@ -68,9 +68,28 @@ auto_features:
   on_project_load:
     - analyze_structure: true
     - load_harness_config: true
-    - setup_provider: true
+    - setup_provider: false  # プロバイダー自動設定無効
   
   # ファイル変更時の自動実行  
   on_file_change:
     - auto_review: false  # 必要に応じて true に
     - syntax_check: true
+
+# 🚀 プロバイダー設定手順
+#
+# このファイルのデフォルトではプロバイダーは未設定です。
+# OpenCode Web を利用するには以下のいずれかを選択して設定してください：
+#
+# 1️⃣ GitHub Copilot を使用:
+#    providers.default: "github-copilot"
+#    環境変数: GITHUB_TOKEN=ghp_xxxx
+#
+# 2️⃣ OpenAI を使用:
+#    providers.default: "openai" 
+#    環境変数: OPENAI_API_KEY=sk-xxxx
+#
+# 3️⃣ Anthropic を使用:
+#    providers.default: "anthropic"
+#    環境変数: ANTHROPIC_API_KEY=sk-xxxx
+#
+# 📖 詳細手順: docs/OPENCODE_INTEGRATION.md または QUICK_FIX.md を参照

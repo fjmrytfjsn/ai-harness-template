@@ -12,19 +12,16 @@
 
 従来のコンテキストエンジニアリングから**ハーネスエンジニアリング**へ。プロジェクト固有のAI機能を高速・安全・効率的に実現します。
 
-## ⚠️ 重要: 認証設定について
+## ⚠️ 重要: AI プロバイダー設定について
 
-**OpenCode Web を使用する際の注意**:
-- GitHub Codespaces では **401 Unauthorized エラー** が発生する場合があります
-- 原因: Codespaces の制限付きトークンでは GitHub Copilot API にアクセスできません
+**デフォルトでは AI プロバイダーは未設定です**。OpenCode Web を使用するには以下のいずれかを設定してください：
 
-**推奨解決策**:
-1. **Personal Access Token** を設定（最も確実）
-2. **OpenAI API キー** を利用（代替）  
-3. **ローカル LLM**（Ollama等）を利用（オフライン）
+1. **OpenAI API キー** を設定（最も簡単）
+2. **Personal Access Token** を設定（GitHub Copilot 利用）
+3. **ローカル LLM**（Ollama等）を設定（オフライン）
 
-**🚨 緊急対応**: `QUICK_FIX.md` でワンライナー解決方法を確認してください  
-→ 詳細手順: [認証設定ガイド](docs/OPENCODE_INTEGRATION.md#🔧-トラブルシューティング)
+**🚨 緊急対応**: `QUICK_FIX.md` でワンライナー設定方法を確認してください  
+→ 詳細手順: [プロバイダー設定ガイド](docs/OPENCODE_INTEGRATION.md#🔧-トラブルシューティング)
 
 ## ⚡ クイックスタート
 

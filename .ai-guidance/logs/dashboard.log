@@ -1,4 +1,4 @@
 INFO:__main__:🎯 AI Harness Dashboard 起動完了: http://0.0.0.0:8000
-INFO:aiohttp.access:127.0.0.1 [29/Mar/2026:14:07:42 +0000] "GET / HTTP/1.1" 200 10360 "-" "curl/8.14.1"
-INFO:aiohttp.access:127.0.0.1 [29/Mar/2026:14:07:45 +0000] "GET / HTTP/1.1" 200 10360 "-" "curl/8.14.1"
-INFO:aiohttp.access:127.0.0.1 [29/Mar/2026:14:07:45 +0000] "GET / HTTP/1.1" 200 10360 "-" "curl/8.14.1"
+INFO:aiohttp.access:127.0.0.1 [29/Mar/2026:14:28:22 +0000] "GET / HTTP/1.1" 200 10360 "-" "curl/8.14.1"
+INFO:aiohttp.access:127.0.0.1 [29/Mar/2026:14:28:25 +0000] "GET / HTTP/1.1" 200 10360 "-" "curl/8.14.1"
+INFO:aiohttp.access:127.0.0.1 [29/Mar/2026:14:28:25 +0000] "GET / HTTP/1.1" 200 10360 "-" "curl/8.14.1"
