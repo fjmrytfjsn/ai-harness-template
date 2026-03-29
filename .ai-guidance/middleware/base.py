@@ -29,10 +29,14 @@ class Middleware(ABC):
             config: ミドルウェア設定辞書
         """
         self.config = config or {}
-        self.enabled = self.config.get('enabled', True)
-        self.logger = logging.getLogger(f"{self.__class__.__module__}.{self.__class__.__name__}")
+        self.enabled = self.config.get("enabled", True)
+        self.logger = logging.getLogger(
+            f"{self.__class__.__module__}.{self.__class__.__name__}"
+        )
 
-    async def before_agent(self, request: Dict[str, Any], context: Any) -> Dict[str, Any]:
+    async def before_agent(
+        self, request: Dict[str, Any], context: Any
+    ) -> Dict[str, Any]:
         """エージェント処理開始前のフック
 
         リクエストの検証、変換、準備処理を実行
@@ -125,13 +129,13 @@ class TimingMixin:
 
     def start_timer(self, name: str):
         """タイマー開始"""
-        if not hasattr(self, '_timers'):
+        if not hasattr(self, "_timers"):
             self._timers = {}
         self._timers[name] = time.time()
 
     def end_timer(self, name: str) -> float:
         """タイマー終了して経過時間を返す"""
-        if not hasattr(self, '_timers') or name not in self._timers:
+        if not hasattr(self, "_timers") or name not in self._timers:
             return 0.0
 
         elapsed = time.time() - self._timers[name]
@@ -153,8 +157,8 @@ class LoggingMixin:
     def log_error(self, message: str, error: Exception = None, **kwargs):
         """エラーログ出力"""
         if error:
-            kwargs['error'] = str(error)
-            kwargs['error_type'] = type(error).__name__
+            kwargs["error"] = str(error)
+            kwargs["error_type"] = type(error).__name__
         self.logger.error(message, extra=kwargs)
 
     def log_warning(self, message: str, **kwargs):
@@ -194,13 +198,15 @@ class BaseMiddleware(Middleware, TimingMixin, LoggingMixin, SecurityMixin):
         super().__init__(config)
         self.session_id = None
 
-    async def before_agent(self, request: Dict[str, Any], context: Any) -> Dict[str, Any]:
+    async def before_agent(
+        self, request: Dict[str, Any], context: Any
+    ) -> Dict[str, Any]:
         """基本前処理"""
-        self.session_id = request.get('session_id', 'unknown')
-        self.start_timer('total_processing')
+        self.session_id = request.get("session_id", "unknown")
+        self.start_timer("total_processing")
 
         # 入力検証
-        if not self.validate_input(request.get('message', '')):
+        if not self.validate_input(request.get("message", "")):
             raise ValueError("無効な入力データ")
 
         self.log_info("エージェント処理開始", session_id=self.session_id)
@@ -208,11 +214,13 @@ class BaseMiddleware(Middleware, TimingMixin, LoggingMixin, SecurityMixin):
 
     async def after_agent(self, result: Dict[str, Any], context: Any) -> Dict[str, Any]:
         """基本後処理"""
-        total_time = self.end_timer('total_processing')
+        total_time = self.end_timer("total_processing")
 
-        self.log_info("エージェント処理完了",
-                     session_id=self.session_id,
-                     duration=total_time,
-                     success=result.get('success', False))
+        self.log_info(
+            "エージェント処理完了",
+            session_id=self.session_id,
+            duration=total_time,
+            success=result.get("success", False),
+        )
 
         return result

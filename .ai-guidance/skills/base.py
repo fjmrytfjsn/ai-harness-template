@@ -28,22 +28,22 @@ class Skill(ABC):
         self.config = config or {}
 
         # 基本情報
-        self.name = self.config.get('name', self.__class__.__name__)
-        self.version = self.config.get('version', '1.0.0')
-        self.description = self.config.get('description', '')
+        self.name = self.config.get("name", self.__class__.__name__)
+        self.version = self.config.get("version", "1.0.0")
+        self.description = self.config.get("description", "")
 
         # トリガー設定
-        self.triggers = self.config.get('triggers', [])
-        self.context_patterns = self.config.get('context_patterns', [])
+        self.triggers = self.config.get("triggers", [])
+        self.context_patterns = self.config.get("context_patterns", [])
 
         # 依存関係
-        self.dependencies = self.config.get('dependencies', [])
-        self.required_tools = self.config.get('required_tools', [])
+        self.dependencies = self.config.get("dependencies", [])
+        self.required_tools = self.config.get("required_tools", [])
 
         # 実行制御
-        self.timeout = self.config.get('timeout', 300)  # 5分
-        self.retry_count = self.config.get('retry_count', 3)
-        self.parallel_safe = self.config.get('parallel_safe', False)
+        self.timeout = self.config.get("timeout", 300)  # 5分
+        self.retry_count = self.config.get("retry_count", 3)
+        self.parallel_safe = self.config.get("parallel_safe", False)
 
         # 結果管理
         self.results = []
@@ -83,7 +83,9 @@ class Skill(ABC):
 
         # 依存関係チェック
         if not await self.validate_dependencies():
-            raise SkillDependencyError(f"依存関係が満たされていません: {self.dependencies}")
+            raise SkillDependencyError(
+                f"依存関係が満たされていません: {self.dependencies}"
+            )
 
         # ツール可用性チェック
         if not await self.check_tools_available():
@@ -126,15 +128,15 @@ class Skill(ABC):
         """単一依存関係のチェック"""
         try:
             # Python モジュールの場合
-            if '.' in dependency:
+            if "." in dependency:
                 __import__(dependency)
                 return True
 
             # コマンドの場合
             if self.harness:
-                result = await self.harness.call_tool('bash',
-                    command=f"which {dependency}",
-                    capture_output=True)
+                result = await self.harness.call_tool(
+                    "bash", command=f"which {dependency}", capture_output=True
+                )
                 return result.returncode == 0
 
             return True
@@ -151,38 +153,30 @@ class Skill(ABC):
     # 結果管理メソッド
     def add_result(self, result: Any):
         """成功結果を追加"""
-        self.results.append({
-            'data': result,
-            'timestamp': time.time(),
-            'type': 'result'
-        })
+        self.results.append(
+            {"data": result, "timestamp": time.time(), "type": "result"}
+        )
         self.logger.debug(f"結果追加: {result}")
 
     def add_error(self, error: str):
         """エラーを追加"""
-        self.errors.append({
-            'message': error,
-            'timestamp': time.time(),
-            'type': 'error'
-        })
+        self.errors.append(
+            {"message": error, "timestamp": time.time(), "type": "error"}
+        )
         self.logger.error(error)
 
     def add_warning(self, warning: str):
         """警告を追加"""
-        self.warnings.append({
-            'message': warning,
-            'timestamp': time.time(),
-            'type': 'warning'
-        })
+        self.warnings.append(
+            {"message": warning, "timestamp": time.time(), "type": "warning"}
+        )
         self.logger.warning(warning)
 
     def add_debug_info(self, info: str):
         """デバッグ情報を追加"""
-        self.debug_info.append({
-            'message': info,
-            'timestamp': time.time(),
-            'type': 'debug'
-        })
+        self.debug_info.append(
+            {"message": info, "timestamp": time.time(), "type": "debug"}
+        )
         self.logger.debug(info)
 
     # ハーネス統合メソッド
@@ -214,12 +208,12 @@ class Skill(ABC):
     # メモリアクセス
     async def save_to_memory(self, key: str, value: Any):
         """メモリに値を保存"""
-        if self.harness and hasattr(self.harness, 'memory'):
+        if self.harness and hasattr(self.harness, "memory"):
             await self.harness.memory.save(key, value)
 
     async def load_from_memory(self, key: str, default: Any = None):
         """メモリから値をロード"""
-        if self.harness and hasattr(self.harness, 'memory'):
+        if self.harness and hasattr(self.harness, "memory"):
             return await self.harness.memory.load(key, default)
         return default
 
@@ -231,25 +225,27 @@ class Skill(ABC):
             duration = self.end_time - self.start_time
 
         return {
-            'skill_name': self.name,
-            'version': self.version,
-            'duration_seconds': duration,
-            'results_count': len(self.results),
-            'errors_count': len(self.errors),
-            'warnings_count': len(self.warnings),
-            'success': len(self.errors) == 0,
-            'partial_success': len(self.results) > 0 and len(self.errors) > 0
+            "skill_name": self.name,
+            "version": self.version,
+            "duration_seconds": duration,
+            "results_count": len(self.results),
+            "errors_count": len(self.errors),
+            "warnings_count": len(self.warnings),
+            "success": len(self.errors) == 0,
+            "partial_success": len(self.results) > 0 and len(self.errors) > 0,
         }
 
     def get_detailed_report(self) -> Dict[str, Any]:
         """詳細レポートを取得"""
         return {
             **self.get_summary(),
-            'results': self.results,
-            'errors': self.errors,
-            'warnings': self.warnings,
-            'debug_info': self.debug_info if self.logger.isEnabledFor(logging.DEBUG) else [],
-            'config': self.config
+            "results": self.results,
+            "errors": self.errors,
+            "warnings": self.warnings,
+            "debug_info": (
+                self.debug_info if self.logger.isEnabledFor(logging.DEBUG) else []
+            ),
+            "config": self.config,
         }
 
 
@@ -261,15 +257,17 @@ class CompositeSkill(Skill):
 
     def __init__(self, config: Dict[str, Any] = None):
         super().__init__(config)
-        self.sub_skills = self.config.get('sub_skills', [])
-        self.execution_mode = self.config.get('execution_mode', 'sequential')  # sequential or parallel
-        self.fail_fast = self.config.get('fail_fast', True)
+        self.sub_skills = self.config.get("sub_skills", [])
+        self.execution_mode = self.config.get(
+            "execution_mode", "sequential"
+        )  # sequential or parallel
+        self.fail_fast = self.config.get("fail_fast", True)
 
     async def execute(self, *args, **kwargs) -> Dict[str, Any]:
         """複合スキル実行"""
         sub_results = []
 
-        if self.execution_mode == 'parallel':
+        if self.execution_mode == "parallel":
             sub_results = await self._execute_parallel(*args, **kwargs)
         else:
             sub_results = await self._execute_sequential(*args, **kwargs)
@@ -287,12 +285,12 @@ class CompositeSkill(Skill):
                 results.append(result)
 
                 # 失敗時に即座に停止
-                if self.fail_fast and not result.get('success', False):
+                if self.fail_fast and not result.get("success", False):
                     self.add_error(f"サブスキル {skill_name} が失敗したため実行を停止")
                     break
 
             except Exception as e:
-                error_result = {'success': False, 'error': str(e), 'skill': skill_name}
+                error_result = {"success": False, "error": str(e), "skill": skill_name}
                 results.append(error_result)
 
                 if self.fail_fast:
@@ -313,43 +311,43 @@ class CompositeSkill(Skill):
 
         return await asyncio.gather(*tasks, return_exceptions=True)
 
-    async def _execute_single_skill(self, skill_name: str, *args, **kwargs) -> Dict[str, Any]:
+    async def _execute_single_skill(
+        self, skill_name: str, *args, **kwargs
+    ) -> Dict[str, Any]:
         """単一スキルの実行（エラーハンドリング付き）"""
         try:
             return await self.execute_skill(skill_name, *args, **kwargs)
         except Exception as e:
-            return {
-                'success': False,
-                'error': str(e),
-                'skill': skill_name
-            }
+            return {"success": False, "error": str(e), "skill": skill_name}
 
     def _merge_results(self, sub_results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """サブスキル結果をマージ"""
 
-        successful_results = [r for r in sub_results if r.get('success', False)]
-        failed_results = [r for r in sub_results if not r.get('success', False)]
+        successful_results = [r for r in sub_results if r.get("success", False)]
+        failed_results = [r for r in sub_results if not r.get("success", False)]
 
         # 統合結果
         merged = {
-            'success': len(failed_results) == 0,
-            'partial_success': len(successful_results) > 0 and len(failed_results) > 0,
-            'total_sub_skills': len(sub_results),
-            'successful_sub_skills': len(successful_results),
-            'failed_sub_skills': len(failed_results),
-            'sub_results': sub_results,
-            'execution_mode': self.execution_mode
+            "success": len(failed_results) == 0,
+            "partial_success": len(successful_results) > 0 and len(failed_results) > 0,
+            "total_sub_skills": len(sub_results),
+            "successful_sub_skills": len(successful_results),
+            "failed_sub_skills": len(failed_results),
+            "sub_results": sub_results,
+            "execution_mode": self.execution_mode,
         }
 
         # 成功した結果をメインの結果に追加
         for result in successful_results:
-            if 'results' in result:
-                self.results.extend(result['results'])
+            if "results" in result:
+                self.results.extend(result["results"])
 
         # 失敗した結果をエラーに追加
         for result in failed_results:
-            if 'error' in result:
-                self.add_error(f"サブスキル {result.get('skill', 'unknown')} エラー: {result['error']}")
+            if "error" in result:
+                self.add_error(
+                    f"サブスキル {result.get('skill', 'unknown')} エラー: {result['error']}"
+                )
 
         return merged
 
@@ -357,24 +355,29 @@ class CompositeSkill(Skill):
 # 例外クラス
 class SkillError(Exception):
     """スキル一般エラー"""
+
     pass
 
 
 class SkillDependencyError(SkillError):
     """スキル依存関係エラー"""
+
     pass
 
 
 class SkillToolError(SkillError):
     """スキルツールエラー"""
+
     pass
 
 
 class SkillTimeoutError(SkillError):
     """スキルタイムアウトエラー"""
+
     pass
 
 
 class SkillNotFoundError(SkillError):
     """スキル未発見エラー"""
+
     pass

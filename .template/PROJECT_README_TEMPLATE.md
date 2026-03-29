@@ -22,6 +22,7 @@
 ## 🛠️ 開発開始
 
 ### 1. AI プロバイダー設定
+
 ```bash
 # OpenAI を使用する場合（推奨）
 echo "OPENAI_API_KEY=sk-your-key" > .env
@@ -29,11 +30,13 @@ sed -i 's/default: null/default: "openai"/' .ai-guidance/opencode-integration.ya
 ```
 
 ### 2. OpenCode Web 起動
+
 - VS Code の「PORTS」タブ → ポート3000
 - ブラウザで OpenCode Web にアクセス
 - AI 支援付きコーディング開始
 
 ### 3. AI Harness 機能
+
 - **🔍 Code Review**: 高度なコード分析
 - **📝 Commit Message**: 適切なコミットメッセージ生成
 - **📊 File Analysis**: ファイル品質メトリクス
@@ -61,20 +64,22 @@ sed -i 's/default: null/default: "openai"/' .ai-guidance/opencode-integration.ya
 ## 🔧 カスタマイズ
 
 ### AI Harness 設定
+
 `.ai-guidance/harness.yaml` でプロジェクト固有の設定をカスタマイズできます：
 
 ```yaml
 project:
   name: "{{PROJECT_NAME}}"
   description: "{{PROJECT_DESCRIPTION}}"
-  
+
 harness:
   middleware_enabled: true
   skills_enabled: true
-  auto_review: false  # 必要に応じて true に
+  auto_review: false # 必要に応じて true に
 ```
 
 ### 新しいスキルの追加
+
 ```bash
 # スキル作成例
 cp .ai-guidance/skills/code_review.py .ai-guidance/skills/my_skill.py

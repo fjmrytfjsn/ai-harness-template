@@ -45,11 +45,13 @@ LICENSE                 # ライセンス
    - `README.md` のタイトルと説明
 
 2. **不要ファイルの削除**
+
    ```bash
    rm TEMPLATE_CLEANUP.md
    ```
 
 3. **Git コミット**
+
    ```bash
    git add .
    git commit -m "feat: テンプレートからプロジェクト初期化"
@@ -67,6 +69,7 @@ LICENSE                 # ライセンス
 ## 📚 参考資料
 
 初期化後は以下を参照：
+
 - `SETUP.md` - 詳細なセットアップ手順
 - `docs/EXAMPLES.md` - 設定例集
 - `USAGE.md` - 使用方法ガイド

@@ -17,6 +17,7 @@
 ### 1. このテンプレートを使用
 
 **GitHub Web UI（推奨）:**
+
 1. [Use this template](https://github.com/fjmrytfjsn/ai-harness-template) ボタンをクリック
 2. 新しいリポジトリ名を入力
 3. "Create repository from template" をクリック
@@ -25,8 +26,9 @@
 ### 2. 初期設定（1分で完了）
 
 Codespaces起動後、以下が自動実行されます：
+
 - ✅ プロジェクト設定・初期化
-- ✅ 依存関係インストール  
+- ✅ 依存関係インストール
 - ✅ OpenCode Web 起動
 - ⚠️ **AI プロバイダー設定が必要** → `QUICK_FIX.md` 参照
 
@@ -47,21 +49,25 @@ sed -i 's/default: null/default: "openai"/' .ai-guidance/opencode-integration.ya
 ## ✨ 主な機能
 
 ### 🤖 AI エージェントハーネス
+
 - **動的スキルシステム**: コードレビュー・ファイル解析・コミットメッセージ生成
 - **ミドルウェアスタック**: セキュリティ・ログ・パフォーマンス
 - **MCP統合**: GitHub/Playwright等の標準化ツール連携
 
 ### 📊 リアルタイム監視
+
 - **AI Harness Dashboard**: システム状態・メトリクス・ログ
 - **プロジェクト分析**: ファイル構造・依存関係・品質指標
 - **パフォーマンス追跡**: レスポンス時間・使用量・エラー率
 
 ### 🌐 OpenCode Web 統合
+
 - **ブラウザベース開発**: VS Code不要の AI コーディング
 - **マルチプロバイダー対応**: OpenAI/Anthropic/Ollama/GitHub Copilot
 - **カスタムコマンド**: プロジェクト固有AI機能の統合
 
 ### 🔄 安全な更新システム
+
 - **テンプレート更新**: 新機能の自動取り込み
 - **バックアップ・ロールバック**: 安全な実験環境
 - **競合解決**: インテリジェントなマージ戦略

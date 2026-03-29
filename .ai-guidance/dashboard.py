@@ -26,197 +26,192 @@ sys.path.insert(0, str(PROJECT_ROOT))
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class AIHarnessDashboard:
     """AI Harness ダッシュボード"""
-    
+
     def __init__(self, config_path: str = ".ai-guidance/harness.yaml"):
         self.config_path = Path(config_path)
         self.config = self.load_config()
         self.websockets = set()
         self.metrics = {
-            'total_requests': 0,
-            'skill_usage': {},
-            'middleware_performance': {},
-            'error_rate': 0.0,
-            'uptime_start': datetime.now(),
-            'recent_activities': []
+            "total_requests": 0,
+            "skill_usage": {},
+            "middleware_performance": {},
+            "error_rate": 0.0,
+            "uptime_start": datetime.now(),
+            "recent_activities": [],
         }
-        
+
     def load_config(self) -> Dict[str, Any]:
         """設定ファイル読み込み"""
         try:
             if self.config_path.exists():
-                with open(self.config_path, 'r', encoding='utf-8') as f:
+                with open(self.config_path, "r", encoding="utf-8") as f:
                     return yaml.safe_load(f) or {}
         except Exception as e:
             logger.error(f"設定ファイル読み込みエラー: {e}")
         return {}
-    
+
     def get_project_info(self) -> Dict[str, Any]:
         """プロジェクト情報取得"""
-        project = self.config.get('project', {})
+        project = self.config.get("project", {})
         return {
-            'name': project.get('name', 'AI Harness プロジェクト'),
-            'version': project.get('version', '1.0.0'),
-            'description': project.get('description', ''),
-            'authors': project.get('authors', []),
-            'repository': project.get('repository', '')
+            "name": project.get("name", "AI Harness プロジェクト"),
+            "version": project.get("version", "1.0.0"),
+            "description": project.get("description", ""),
+            "authors": project.get("authors", []),
+            "repository": project.get("repository", ""),
         }
-    
+
     def get_harness_status(self) -> Dict[str, Any]:
         """ハーネス状態取得"""
-        harness = self.config.get('harness', {})
+        harness = self.config.get("harness", {})
         skills = self.scan_skills()
         middleware = self.scan_middleware()
-        
+
         return {
-            'enabled_skills': len(skills['available']),
-            'active_middleware': len(middleware['available']),
-            'context_size': harness.get('context', {}).get('max_tokens', 0),
-            'mcp_integrations': len(harness.get('mcp', {}).get('providers', {})),
-            'skills': skills,
-            'middleware': middleware
+            "enabled_skills": len(skills["available"]),
+            "active_middleware": len(middleware["available"]),
+            "context_size": harness.get("context", {}).get("max_tokens", 0),
+            "mcp_integrations": len(harness.get("mcp", {}).get("providers", {})),
+            "skills": skills,
+            "middleware": middleware,
         }
-    
+
     def scan_skills(self) -> Dict[str, List[str]]:
         """スキルスキャン"""
         skills_dir = Path(".ai-guidance/skills")
         available = []
-        
+
         if skills_dir.exists():
             for skill_file in skills_dir.glob("*.py"):
                 if skill_file.name != "__init__.py":
                     available.append(skill_file.stem)
-        
+
         return {
-            'available': available,
-            'total_count': len(available),
-            'most_used': self.get_top_skills()
+            "available": available,
+            "total_count": len(available),
+            "most_used": self.get_top_skills(),
         }
-    
+
     def scan_middleware(self) -> Dict[str, List[str]]:
         """ミドルウェアスキャン"""
         middleware_dir = Path(".ai-guidance/middleware")
         available = []
-        
+
         if middleware_dir.exists():
             for middleware_file in middleware_dir.glob("*.py"):
                 if middleware_file.name != "__init__.py":
                     available.append(middleware_file.stem)
-        
-        return {
-            'available': available,
-            'total_count': len(available)
-        }
-    
+
+        return {"available": available, "total_count": len(available)}
+
     def get_top_skills(self, limit: int = 5) -> List[Dict[str, Any]]:
         """よく使用されるスキル取得"""
-        skills_usage = self.metrics['skill_usage']
+        skills_usage = self.metrics["skill_usage"]
         sorted_skills = sorted(skills_usage.items(), key=lambda x: x[1], reverse=True)
-        
+
         return [
-            {'name': name, 'usage_count': count}
+            {"name": name, "usage_count": count}
             for name, count in sorted_skills[:limit]
         ]
-    
+
     def get_system_metrics(self) -> Dict[str, Any]:
         """システムメトリクス取得"""
-        uptime = datetime.now() - self.metrics['uptime_start']
-        
+        uptime = datetime.now() - self.metrics["uptime_start"]
+
         return {
-            'uptime_seconds': int(uptime.total_seconds()),
-            'uptime_formatted': self.format_duration(uptime),
-            'total_requests': self.metrics['total_requests'],
-            'error_rate': self.metrics['error_rate'],
-            'avg_response_time': self.calculate_avg_response_time(),
-            'memory_usage': self.get_memory_usage(),
-            'recent_activities': self.metrics['recent_activities'][-10:]  # 最新10件
+            "uptime_seconds": int(uptime.total_seconds()),
+            "uptime_formatted": self.format_duration(uptime),
+            "total_requests": self.metrics["total_requests"],
+            "error_rate": self.metrics["error_rate"],
+            "avg_response_time": self.calculate_avg_response_time(),
+            "memory_usage": self.get_memory_usage(),
+            "recent_activities": self.metrics["recent_activities"][-10:],  # 最新10件
         }
-    
+
     def format_duration(self, duration: timedelta) -> str:
         """期間のフォーマット"""
         days = duration.days
         hours, remainder = divmod(duration.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
-        
+
         if days > 0:
             return f"{days}日 {hours}時間 {minutes}分"
         elif hours > 0:
             return f"{hours}時間 {minutes}分 {seconds}秒"
         else:
             return f"{minutes}分 {seconds}秒"
-    
+
     def calculate_avg_response_time(self) -> float:
         """平均レスポンス時間計算"""
         # 実際の実装では middleware からのデータを使用
         return 1.2  # デモ用
-    
+
     def get_memory_usage(self) -> Dict[str, Any]:
         """メモリ使用量取得"""
         try:
             import psutil
+
             process = psutil.Process()
             memory_info = process.memory_info()
-            
+
             return {
-                'rss_mb': round(memory_info.rss / 1024 / 1024, 2),
-                'vms_mb': round(memory_info.vms / 1024 / 1024, 2),
-                'percent': round(process.memory_percent(), 2)
+                "rss_mb": round(memory_info.rss / 1024 / 1024, 2),
+                "vms_mb": round(memory_info.vms / 1024 / 1024, 2),
+                "percent": round(process.memory_percent(), 2),
             }
         except ImportError:
-            return {
-                'rss_mb': 0,
-                'vms_mb': 0,
-                'percent': 0
-            }
-    
+            return {"rss_mb": 0, "vms_mb": 0, "percent": 0}
+
     def log_activity(self, activity: str, details: str = ""):
         """アクティビティログ"""
         activity_entry = {
-            'timestamp': datetime.now().isoformat(),
-            'activity': activity,
-            'details': details
+            "timestamp": datetime.now().isoformat(),
+            "activity": activity,
+            "details": details,
         }
-        self.metrics['recent_activities'].append(activity_entry)
-        
+        self.metrics["recent_activities"].append(activity_entry)
+
         # 最新100件のみ保持
-        if len(self.metrics['recent_activities']) > 100:
-            self.metrics['recent_activities'] = self.metrics['recent_activities'][-100:]
-    
+        if len(self.metrics["recent_activities"]) > 100:
+            self.metrics["recent_activities"] = self.metrics["recent_activities"][-100:]
+
     async def websocket_handler(self, request):
         """WebSocket ハンドラー"""
         ws = web.WebSocketResponse()
         await ws.prepare(request)
-        
+
         self.websockets.add(ws)
         logger.info("新しい WebSocket 接続")
-        
+
         try:
             async for msg in ws:
                 if msg.type == WSMsgType.TEXT:
                     data = json.loads(msg.data)
-                    if data.get('type') == 'get_status':
+                    if data.get("type") == "get_status":
                         await self.send_status_update(ws)
                 elif msg.type == WSMsgType.ERROR:
-                    logger.error(f'WebSocket エラー: {ws.exception()}')
+                    logger.error(f"WebSocket エラー: {ws.exception()}")
         finally:
             self.websockets.discard(ws)
             logger.info("WebSocket 接続終了")
-        
+
         return ws
-    
+
     async def send_status_update(self, ws=None):
         """状態更新送信"""
         status_data = {
-            'type': 'status_update',
-            'timestamp': datetime.now().isoformat(),
-            'project': self.get_project_info(),
-            'harness': self.get_harness_status(),
-            'metrics': self.get_system_metrics()
+            "type": "status_update",
+            "timestamp": datetime.now().isoformat(),
+            "project": self.get_project_info(),
+            "harness": self.get_harness_status(),
+            "metrics": self.get_system_metrics(),
         }
-        
+
         message = json.dumps(status_data, ensure_ascii=False, default=str)
-        
+
         if ws:
             await ws.send_str(message)
         else:
@@ -227,18 +222,18 @@ class AIHarnessDashboard:
                 except Exception as e:
                     logger.error(f"WebSocket 送信エラー: {e}")
                     self.websockets.discard(websocket)
-    
+
     async def periodic_status_broadcast(self):
         """定期的な状態配信"""
         while True:
             await asyncio.sleep(5)  # 5秒ごと
             if self.websockets:
                 await self.send_status_update()
-    
+
     def get_dashboard_html(self) -> str:
         """ダッシュボード HTML 生成"""
         project_info = self.get_project_info()
-        
+
         return f"""
 <!DOCTYPE html>
 <html lang="ja">
@@ -482,69 +477,79 @@ class AIHarnessDashboard:
 </body>
 </html>
         """
-    
+
     async def index_handler(self, request):
         """メインページハンドラー"""
-        return web.Response(text=self.get_dashboard_html(), content_type='text/html')
-    
+        return web.Response(text=self.get_dashboard_html(), content_type="text/html")
+
     def create_app(self):
         """Webアプリケーション作成"""
         app = web.Application()
-        
+
         # CORS設定
-        cors = aiohttp_cors.setup(app, defaults={
-            "*": aiohttp_cors.ResourceOptions(
-                allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-                allow_methods="*"
-            )
-        })
-        
+        cors = aiohttp_cors.setup(
+            app,
+            defaults={
+                "*": aiohttp_cors.ResourceOptions(
+                    allow_credentials=True,
+                    expose_headers="*",
+                    allow_headers="*",
+                    allow_methods="*",
+                )
+            },
+        )
+
         # ルート設定
-        app.router.add_get('/', self.index_handler)
-        app.router.add_get('/ws', self.websocket_handler)
-        
+        app.router.add_get("/", self.index_handler)
+        app.router.add_get("/ws", self.websocket_handler)
+
         # CORS適用
         for route in list(app.router.routes()):
             cors.add(route)
-        
+
         return app
-    
-    async def start(self, host: str = '0.0.0.0', port: int = 8000):
+
+    async def start(self, host: str = "0.0.0.0", port: int = 8000):
         """ダッシュボード開始"""
         self.log_activity("Dashboard Starting", f"ポート {port} で起動中")
-        
+
         app = self.create_app()
-        
+
         # バックグラウンドタスク開始
         asyncio.create_task(self.periodic_status_broadcast())
-        
+
         runner = web.AppRunner(app)
         await runner.setup()
-        
+
         site = web.TCPSite(runner, host, port)
         await site.start()
-        
+
         self.log_activity("Dashboard Started", f"http://{host}:{port} で利用可能")
         logger.info(f"🎯 AI Harness Dashboard 起動完了: http://{host}:{port}")
-        
+
         return runner
+
 
 async def main():
     """メイン関数"""
     import argparse
-    
-    parser = argparse.ArgumentParser(description='AI Harness Dashboard')
-    parser.add_argument('--host', default='0.0.0.0', help='ホスト (デフォルト: 0.0.0.0)')
-    parser.add_argument('--port', type=int, default=8000, help='ポート (デフォルト: 8000)')
-    parser.add_argument('--config', default='.ai-guidance/harness.yaml', help='設定ファイルパス')
-    
+
+    parser = argparse.ArgumentParser(description="AI Harness Dashboard")
+    parser.add_argument(
+        "--host", default="0.0.0.0", help="ホスト (デフォルト: 0.0.0.0)"
+    )
+    parser.add_argument(
+        "--port", type=int, default=8000, help="ポート (デフォルト: 8000)"
+    )
+    parser.add_argument(
+        "--config", default=".ai-guidance/harness.yaml", help="設定ファイルパス"
+    )
+
     args = parser.parse_args()
-    
+
     dashboard = AIHarnessDashboard(config_path=args.config)
     runner = await dashboard.start(host=args.host, port=args.port)
-    
+
     try:
         while True:
             await asyncio.sleep(1)
@@ -553,5 +558,6 @@ async def main():
     finally:
         await runner.cleanup()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     asyncio.run(main())

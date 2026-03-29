@@ -1,6 +1,7 @@
 # AI Harness Template - Version Management
 
 ## 🏷️ Current Version
+
 - **Version**: v1.0.0
 - **Release Date**: 2024-12-26
 - **Code Name**: "Genesis"
@@ -9,7 +10,9 @@
 ## 📋 Version History
 
 ### v1.0.0 - "Genesis" (2024-12-26)
+
 **🎉 Initial Release**
+
 - ✅ Complete AI Harness implementation
 - ✅ OpenCode Web integration with auto-startup
 - ✅ Real-time Dashboard with monitoring
@@ -19,6 +22,7 @@
 - ✅ Template update system
 
 **Key Features:**
+
 - Dynamic skill system with on-demand loading
 - Middleware architecture with 6-hook system
 - MCP integration for GitHub and Playwright
@@ -28,12 +32,14 @@
 ### Future Releases
 
 #### v1.1.0 - "Evolution" (Planned)
+
 - 🔄 Enhanced template update system
 - 📊 Advanced Dashboard metrics
 - 🔒 Enterprise security features
 - 🌐 Multi-language AI provider support
 
 #### v1.2.0 - "Intelligence" (Planned)
+
 - 🧠 AI-powered code analysis
 - 📈 Performance optimization engine
 - 🔍 Advanced debugging tools
@@ -42,7 +48,9 @@
 ## 🔄 Update Strategy
 
 ### For Template Users
+
 Use the built-in update system:
+
 ```bash
 # Check for updates
 ./scripts/update-template.sh check
@@ -55,6 +63,7 @@ Use the built-in update system:
 ```
 
 ### Update Philosophy
+
 - **Backward Compatible**: Existing projects continue to work
 - **Non-Breaking**: Custom configurations preserved
 - **Incremental**: Small, focused updates
@@ -63,8 +72,8 @@ Use the built-in update system:
 ## 📊 Compatibility Matrix
 
 | Template Version | OpenCode Web | Python | Node.js | DevContainer |
-|-----------------|-------------|--------|---------|--------------|
-| v1.0.0          | latest      | 3.11+  | LTS     | ✅           |
+| ---------------- | ------------ | ------ | ------- | ------------ |
+| v1.0.0           | latest       | 3.11+  | LTS     | ✅           |
 
 ## 🔖 Semantic Versioning
 
@@ -77,6 +86,7 @@ We follow [Semantic Versioning](https://semver.org/):
 ## 🎯 Release Process
 
 ### For Template Maintainers
+
 1. **Development**: Feature branches from `main`
 2. **Testing**: Comprehensive testing in Codespaces
 3. **Documentation**: Update all docs and guides
@@ -85,6 +95,7 @@ We follow [Semantic Versioning](https://semver.org/):
 6. **Notification**: Update announcement
 
 ### Release Channels
+
 - **Stable**: Main branch, production-ready
 - **Beta**: Pre-release testing (beta branch)
 - **Alpha**: Experimental features (alpha branch)
@@ -92,7 +103,9 @@ We follow [Semantic Versioning](https://semver.org/):
 ## 📢 Update Notifications
 
 ### Automatic Detection
+
 The update system checks for new versions and notifies users:
+
 ```bash
 # During regular usage
 ./scripts/dashboard.sh start
@@ -100,6 +113,7 @@ The update system checks for new versions and notifies users:
 ```
 
 ### Manual Checking
+
 ```bash
 # Explicit update check
 ./scripts/update-template.sh check
@@ -108,16 +122,19 @@ The update system checks for new versions and notifies users:
 ## 🛡️ Safety Measures
 
 ### Before Updates
+
 - ✅ Automatic backup of custom configurations
 - ✅ Git status validation (no uncommitted changes)
 - ✅ Conflict detection and warnings
 
 ### During Updates
+
 - ✅ Merge strategy preserving customizations
 - ✅ Protected files (README.md, .env, etc.)
 - ✅ Step-by-step progress reporting
 
 ### After Updates
+
 - ✅ Validation of critical functionality
 - ✅ Rollback option if issues occur
 - ✅ Migration guide if needed
@@ -125,13 +142,16 @@ The update system checks for new versions and notifies users:
 ## 🔧 Customization Preservation
 
 ### Protected Areas
+
 These are never overwritten during updates:
+
 - Project-specific configurations
 - Custom skill implementations
 - Local environment files
 - User documentation additions
 
 ### Merge Strategy
+
 - **Template files**: Updated to latest version
 - **Configuration files**: Smart merge preserving customizations
 - **Documentation**: Template updates + user additions
@@ -140,9 +160,11 @@ These are never overwritten during updates:
 ## 📝 Migration Guides
 
 ### v1.0.x → v1.1.x
-*Will be provided when v1.1.0 is released*
+
+_Will be provided when v1.1.0 is released_
 
 ### Breaking Changes Policy
+
 - Major version bumps only for breaking changes
 - Migration guides provided 30 days before release
 - Legacy support for at least one major version
@@ -150,11 +172,13 @@ These are never overwritten during updates:
 ## 🤝 Contributing to Template Updates
 
 ### For Users
+
 - 🐛 Report bugs via GitHub Issues
 - 💡 Suggest features via Discussions
 - 📖 Improve documentation via Pull Requests
 
 ### For Maintainers
+
 - 🧪 Test updates in multiple project scenarios
 - 📚 Update documentation with all changes
 - 🔒 Ensure security best practices

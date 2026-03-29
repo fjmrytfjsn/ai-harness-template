@@ -14,13 +14,13 @@ AIハーネスに関するよくある質問と回答。
 
 **A:** GitHub Copilotとは補完関係にあります：
 
-| 項目 | GitHub Copilot | AIハーネス |
-|------|---------------|-----------|
-| 役割 | コード補完・生成 | 開発プロセス全体の自動化 |
-| スコープ | エディタ内 | プロジェクト全体 |
-| カスタマイズ | 限定的 | 完全にカスタマイズ可能 |
-| 実行タイミング | リアルタイム | 明示的な指示で実行 |
-| 学習 | できない | プロジェクト固有の学習が可能 |
+| 項目           | GitHub Copilot   | AIハーネス                   |
+| -------------- | ---------------- | ---------------------------- |
+| 役割           | コード補完・生成 | 開発プロセス全体の自動化     |
+| スコープ       | エディタ内       | プロジェクト全体             |
+| カスタマイズ   | 限定的           | 完全にカスタマイズ可能       |
+| 実行タイミング | リアルタイム     | 明示的な指示で実行           |
+| 学習           | できない         | プロジェクト固有の学習が可能 |
 
 ### Q: 導入にはどの程度の工数が必要ですか？
 
@@ -91,6 +91,7 @@ MCP (Model Context Protocol) 経由の外部統合のみネットワークが必
 **A:** 最も一般的な問題はGitHub Copilot APIの認証不足です：
 
 **診断手順**:
+
 1. GitHub Copilot サブスクリプション確認
 2. Personal Access Token の権限確認
 3. API キーの有効性確認
@@ -98,6 +99,7 @@ MCP (Model Context Protocol) 経由の外部統合のみネットワークが必
 **解決策**:
 
 **方法1: GitHub Copilot API 設定**
+
 ```bash
 # 1. Personal Access Token 作成（GitHub Settings）
 # 必要スコープ: repo, copilot, read:user
@@ -113,6 +115,7 @@ npx opencode-ai web --port 3000
 ```
 
 **方法2: OpenAI API 利用**
+
 ```bash
 # .env に追加
 echo "OPENAI_API_KEY=sk-your-openai-key" >> .env
@@ -122,13 +125,15 @@ echo "OPENAI_API_KEY=sk-your-openai-key" >> .env
 ```
 
 **方法3: ローカル LLM 利用**
+
 ```bash
 # Ollama セットアップ
 ollama pull codellama:7b
 # プロバイダー設定: "ollama"
 ```
 
-**根本原因**: 
+**根本原因**:
+
 - GitHub Codespaces の制限付きトークンではCopilot APIにアクセスできません
 - Personal Access Token またはAPI キーが必須です
 
@@ -163,6 +168,7 @@ tail -f ~/.setup.log
 ```
 
 **修正内容**:
+
 - `.zshrc` ファイル不足の解決
 - エラー処理の改善（個別スクリプト失敗時も継続）
 
@@ -180,9 +186,11 @@ cat .ai-guidance/harness.yaml
 ```
 
 **注意**: プレースホルダー（`{{PROJECT_NAME}}` など）は初期化スクリプトで置換されます。
+
 - 非ソースコードプロジェクト（文書管理等）
 
 ❌ **非推奨**:
+
 - 機密性が極めて高いプロジェクト（金融システム等）
 
 ### Q: チームで使う場合の注意点は？
@@ -190,6 +198,7 @@ cat .ai-guidance/harness.yaml
 **A:** チーム利用のベストプラクティス：
 
 **設定管理**:
+
 ```yaml
 # チーム共通設定
 team_config:
@@ -203,11 +212,13 @@ personal_config:
 ```
 
 **権限管理**:
+
 - コードレビュー用アカウント分離
 - 機密情報アクセス制限
 - 監査ログの定期確認
 
 **運用ルール**:
+
 - AIレビュー結果の扱い方定義
 - 人間によるダブルチェック必須範囲の明確化
 - 学習データの共有範囲設定
@@ -217,16 +228,19 @@ personal_config:
 **A:** 段階的に習得可能です：
 
 **Level 1 (1週間)**: 基本操作
+
 - ハーネス設定の理解
 - 標準スキルの使用
 - 基本的なカスタマイズ
 
 **Level 2 (1ヶ月)**: 応用活用
+
 - カスタムスキル作成
 - ミドルウェア設定
 - チーム設定の管理
 
 **Level 3 (3ヶ月)**: 高度な活用
+
 - 複合スキルの開発
 - パフォーマンス最適化
 - セキュリティ設定の詳細調整
@@ -238,6 +252,7 @@ personal_config:
 **A:** はい、2つの方法で作成可能です：
 
 **簡易作成（YAML）**:
+
 ```yaml
 name: "custom_task"
 description: "独自タスクの実行"
@@ -247,6 +262,7 @@ templates:
 ```
 
 **高度な作成（Python）**:
+
 ```python
 class CustomSkill(Skill):
     async def execute(self, **kwargs):
@@ -268,6 +284,7 @@ class CustomSkill(Skill):
 **A:** 企業要件に対応可能な設定項目：
 
 **コンプライアンス**:
+
 ```yaml
 compliance:
   data_retention_days: 90
@@ -277,6 +294,7 @@ compliance:
 ```
 
 **品質ゲート**:
+
 ```yaml
 quality_gates:
   code_coverage_threshold: 80
@@ -293,15 +311,18 @@ quality_gates:
 **A:** 最小限のメンテナンスで運用可能：
 
 **日常運用**:
+
 - ログファイルの定期確認（週1回）
 - スキル使用統計の確認（月1回）
 
 **定期メンテナンス**:
+
 - 設定ファイルのバックアップ（月1回）
 - ハーネステンプレートの更新確認（四半期1回）
 - セキュリティパッチ適用（随時）
 
 **自動化可能な作業**:
+
 ```bash
 # ログローテーション
 find .ai-guidance/logs -name "*.log" -mtime +30 -delete
@@ -315,6 +336,7 @@ python .ai-guidance/tools/generate-usage-report.py
 **A:** 段階的な障害対応手順：
 
 **Level 1: 軽微な問題**
+
 ```bash
 # ログ確認
 tail -f .ai-guidance/logs/harness.log
@@ -327,6 +349,7 @@ rm -rf .ai-guidance/.cache/
 ```
 
 **Level 2: 重大な問題**
+
 ```bash
 # セーフモード起動
 AI_HARNESS_SAFE_MODE=true
@@ -336,6 +359,7 @@ cp .ai-guidance/harness.yaml.backup .ai-guidance/harness.yaml
 ```
 
 **Level 3: 緊急時**
+
 ```bash
 # ハーネス無効化
 mv .ai-guidance .ai-guidance.disabled
@@ -349,11 +373,13 @@ mv .ai-guidance .ai-guidance.disabled
 **A:** 段階的なアップグレード戦略：
 
 **マイナーアップデート**:
+
 1. 設定ファイルのバックアップ
 2. 新スキル・機能の段階的有効化
 3. チームメンバーへの周知
 
 **メジャーアップデート**:
+
 1. 開発環境で事前検証
 2. 移行スクリプトの実行
 3. 段階的なロールアウト（個人→チーム→本番）
@@ -365,11 +391,13 @@ mv .ai-guidance .ai-guidance.disabled
 **A:** ハーネス自体は**完全無料**ですが、関連コストが発生する場合があります：
 
 **無料**:
+
 - ハーネス基盤（オープンソース）
 - 基本スキル
 - ローカル実行
 
 **有料の可能性**:
+
 - 外部AI API利用料（OpenAI, Claude等）
 - クラウドストレージ（大量ログ保存時）
 - 企業向けサポート（将来計画）
@@ -392,16 +420,19 @@ mv .ai-guidance .ai-guidance.disabled
 **A:** ロードマップ（予定）：
 
 **短期（3-6ヶ月）**:
+
 - Visual Studio Code拡張機能
 - より多くの言語サポート
 - パフォーマンス最適化
 
 **中期（6-12ヶ月）**:
+
 - マルチモーダル対応（画像、音声）
 - 機械学習モデル統合
 - クラウドネイティブ対応
 
 **長期（12ヶ月以上）**:
+
 - 自動スキル生成
 - 分散実行サポート
 - エンタープライズ管理機能
@@ -411,16 +442,19 @@ mv .ai-guidance .ai-guidance.disabled
 **A:** 多様な貢献方法があります：
 
 **コード貢献**:
+
 - スキル開発
 - バグ修正
 - ドキュメント改善
 
 **コミュニティ貢献**:
+
 - 使用事例の共有
 - ベストプラクティスの文書化
 - 初心者サポート
 
 **フィードバック**:
+
 - GitHub Issuesでのバグ報告
 - 機能要望の提案
 - ユーザビリティ改善提案

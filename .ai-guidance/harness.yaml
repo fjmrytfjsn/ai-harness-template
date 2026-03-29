@@ -2,18 +2,18 @@
 # エージェント = モデル + ハーネス
 
 project:
-  name: "{{PROJECT_NAME}}"          # TODO: プロジェクト名に変更してください
-  type: "application"              # テンプレートから作成されたプロジェクト
-  description: "{{PROJECT_DESCRIPTION}}"  # TODO: プロジェクトの説明を記入してください
-  
+  name: "{{PROJECT_NAME}}" # TODO: プロジェクト名に変更してください
+  type: "application" # テンプレートから作成されたプロジェクト
+  description: "{{PROJECT_DESCRIPTION}}" # TODO: プロジェクトの説明を記入してください
+
   # プロジェクト設定（必要に応じて変更）
   version: "1.0.0"
-  authors: ["{{AUTHOR_NAME}}"]     # TODO: 作成者名を記入してください
+  authors: ["{{AUTHOR_NAME}}"] # TODO: 作成者名を記入してください
   repository: "{{REPOSITORY_URL}}" # TODO: リポジトリURLを記入してください
 
 # ハーネスアーキテクチャ
 harness:
-  framework: "langchain-deepagents"  # または "autogen" | "custom"
+  framework: "langchain-deepagents" # または "autogen" | "custom"
 
   # エージェントループの核
   agent_loop:
@@ -25,11 +25,11 @@ harness:
 # ミドルウェアスタック（順序重要）
 middleware:
   stack:
-    - "security"      # PII検出、アクセス制御
-    - "context"       # コンテキスト管理、要約
-    - "memory"        # 永続的知識管理
-    - "tools"         # 動的ツール読み込み・ルーティング
-    - "monitoring"    # 使用状況追跡、パフォーマンス測定
+    - "security" # PII検出、アクセス制御
+    - "context" # コンテキスト管理、要約
+    - "memory" # 永続的知識管理
+    - "tools" # 動的ツール読み込み・ルーティング
+    - "monitoring" # 使用状況追跡、パフォーマンス測定
 
   # ミドルウェア設定
   security:
@@ -54,7 +54,7 @@ middleware:
 
 # 動的スキルシステム
 skills:
-  loading: "dynamic"  # "static" | "dynamic" | "auto"
+  loading: "dynamic" # "static" | "dynamic" | "auto"
   confidence_threshold: 0.7
   max_concurrent: 5
 
@@ -80,7 +80,7 @@ mcp:
       auto_start: true
 
     - name: "playwright"
-      auto_start: false  # オンデマンド読み込み
+      auto_start: false # オンデマンド読み込み
 
   # 接続設定
   settings:
@@ -122,7 +122,7 @@ performance:
 
 # 開発 vs 本番
 environment:
-  mode: "development"  # "development" | "staging" | "production"
+  mode: "development" # "development" | "staging" | "production"
 
   development:
     verbose_logging: true

@@ -11,10 +11,12 @@ AIハーネスをプロジェクトに導入するための詳細手順。
 ## 📋 前提条件
 
 ### 必須要件
+
 - **Git**: バージョン管理
 - **AIエージェントツール**: GitHub Copilot CLI、Cursor、またはハーネス対応ツール
 
 ### 推奨環境
+
 - **Node.js 18+** (JavaScript/TypeScriptプロジェクト)
 - **Python 3.8+** (Pythonプロジェクト)
 - **VS Code** + Copilot拡張機能
@@ -68,9 +70,10 @@ vim .ai-guidance/harness.yaml
 ```yaml
 # 最低限の設定項目
 project:
-  name: "your-project-name"           # プロジェクト名
-  description: "プロジェクトの説明"    # 簡潔な説明
+  name: "your-project-name" # プロジェクト名
+  description: "プロジェクトの説明" # 簡潔な説明
   languages: ["Python", "JavaScript"] # 主要使用言語
+
 
 # 他の設定はデフォルトでOK
 ```
@@ -103,6 +106,7 @@ echo ".env" >> .gitignore
 ```
 
 動作確認プロンプト例：
+
 ```
 「このプロジェクトの設定を確認して」
 → harness.yaml が正常に読み込まれるかチェック
@@ -180,7 +184,7 @@ enabled_skills:
   - "code_review"
   - "commit_message"
   - "file_analyzer"
-  - "react_component_analyzer"  # カスタムスキル
+  - "react_component_analyzer" # カスタムスキル
 ```
 
 ## 🛠️ チーム設定
@@ -251,7 +255,7 @@ middleware:
       log_level: "DEBUG"
       log_to_file: true
       log_file_path: ".ai-guidance/logs/debug.log"
-      include_prompts: true   # 開発時のみ
+      include_prompts: true # 開発時のみ
 ```
 
 ### 本番環境
@@ -269,7 +273,7 @@ middleware:
       log_level: "INFO"
       log_to_file: true
       log_file_path: "/var/log/ai-harness/production.log"
-      include_prompts: false  # セキュリティのため無効化
+      include_prompts: false # セキュリティのため無効化
 
   - name: "security"
     config:
@@ -324,7 +328,7 @@ middleware:
         - pattern: "\\bAPI_KEY_\\w+"
           replacement: "[API_KEY_MASKED]"
         - pattern: "password\\s*=\\s*['\"][^'\"]+['\"]"
-          replacement: "password=\"[MASKED]\""
+          replacement: 'password="[MASKED]"'
 ```
 
 ## 🧪 テスト・検証

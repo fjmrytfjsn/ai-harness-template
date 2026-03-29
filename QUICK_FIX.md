@@ -99,6 +99,7 @@ curl -X POST http://localhost:3000/api/complete \
 ## 💡 トラブルシューティング
 
 ### ポート3000が使用中の場合
+
 ```bash
 # プロセス確認・終了
 sudo lsof -ti:3000 | xargs kill -9
@@ -108,15 +109,17 @@ npx opencode-ai web --port 3001 &
 ```
 
 ### 依存関係エラーの場合
+
 ```bash
 # Node.js 依存関係の再インストール
 npm install -g opencode-ai@latest
 
-# Python 依存関係の再インストール  
+# Python 依存関係の再インストール
 pip install -r .ai-guidance/requirements.txt
 ```
 
 ### DevContainer 環境の問題
+
 ```bash
 # 完全リビルド
 # Ctrl+Shift+P → "Dev Containers: Rebuild Container"

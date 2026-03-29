@@ -21,7 +21,7 @@ body:
     validations:
       required: true
 
-  - type: input  
+  - type: input
     id: target_version
     attributes:
       label: アップデート先バージョン

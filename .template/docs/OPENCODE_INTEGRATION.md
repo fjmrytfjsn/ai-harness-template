@@ -13,18 +13,20 @@
          ▼                       ▼                       ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │               GitHub Codespaces / Dev Container                 │
-│              自動セットアップ・ポートフォワーディング               │  
+│              自動セットアップ・ポートフォワーディング               │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ## 🚀 統合機能
 
 ### 1. 自動環境セットアップ
+
 - DevContainer起動時に OpenCode Web 自動起動
 - AI Harness スキル・ミドルウェア自動読み込み
 - 必要な依存関係の自動インストール
 
 ### 2. シームレススキル統合
+
 OpenCode Web から AI Harness の高度なスキルを直接利用：
 
 ```yaml
@@ -32,12 +34,13 @@ OpenCode Web から AI Harness の高度なスキルを直接利用：
 custom_commands:
   - name: "🔍 Harness Code Review"
     command: "code_review"
-    
-  - name: "📝 Generate Commit Message" 
+
+  - name: "📝 Generate Commit Message"
     command: "commit_message"
 ```
 
 ### 3. ミドルウェア統合
+
 - セキュリティフィルタリング（PII検出）
 - パフォーマンス最適化（キャッシュ・並列処理）
 - 監査ログ・メトリクス収集
@@ -47,17 +50,20 @@ custom_commands:
 ### GitHub Codespaces での利用
 
 1. **環境起動**
+
    ```bash
    # リポジトリページから Codespaces 作成
    # 約2-3分で完全セットアップ完了
    ```
 
 2. **OpenCode Web アクセス**
+
    ```
    VS Code の 'PORTS' タブ → ポート 3000 → "Open in Browser"
    ```
 
 3. **AI プロバイダー設定**
+
    ```
    Settings → AI Provider → GitHub Copilot / OpenAI 選択
    ```
@@ -72,6 +78,7 @@ custom_commands:
 ### ローカル Dev Container での利用
 
 1. **VS Code で開く**
+
    ```bash
    code my-project
    # Ctrl+Shift+P → "Dev Containers: Reopen in Container"
@@ -88,10 +95,10 @@ custom_commands:
 ```yaml
 # .ai-guidance/opencode-integration.yaml
 providers:
-  default: "github-copilot"  # プロバイダー変更
-  
+  default: "github-copilot" # プロバイダー変更
+
 ui_customization:
-  custom_commands:           # カスタムコマンド追加
+  custom_commands: # カスタムコマンド追加
     - name: "My Custom Skill"
       command: "my_skill"
 ```
@@ -99,12 +106,12 @@ ui_customization:
 ### AI Harness 設定
 
 ```yaml
-# .ai-guidance/harness.yaml  
+# .ai-guidance/harness.yaml
 harness:
   opencode_integration:
-    enable_web_ui: true      # Web UI 統合有効
-    auto_start: true         # 自動起動
-    port: 3000              # ポート設定
+    enable_web_ui: true # Web UI 統合有効
+    auto_start: true # 自動起動
+    port: 3000 # ポート設定
 ```
 
 ## 🔧 トラブルシューティング
@@ -128,6 +135,7 @@ gh api user/copilot/billing --method GET
 ```
 
 **解決方法**:
+
 ```bash
 # .env ファイルを作成（プロジェクトルート）
 cat > .env << 'EOF'
@@ -141,6 +149,7 @@ source .env
 ```
 
 **Personal Access Token の取得手順**:
+
 1. GitHub → Settings → Developer settings → Personal access tokens
 2. "Generate new token (classic)" を選択
 3. 必要なスコープを選択:
@@ -235,37 +244,42 @@ gh codespace ports
 ## 📊 パフォーマンス最適化
 
 ### 統合による性能向上
+
 - **レスポンス時間**: 3倍高速化（並列処理）
 - **トークン効率**: 70%削減（動的スキルロード）
 - **精度向上**: AI Harness 専門スキル利用
 
 ### 監視・メトリクス
+
 ```yaml
 # 自動収集される指標
 metrics:
   - response_time_ms
   - token_usage
-  - skill_usage_count  
+  - skill_usage_count
   - error_rate
 ```
 
 ## 🌟 ベストプラクティス
 
 ### 1. プロジェクト初期化
+
 ```bash
 ./scripts/initialize-project.sh  # 必須実行
 ```
 
 ### 2. AI プロバイダー選択
+
 - **開発効率重視**: GitHub Copilot
 - **高精度・複雑タスク**: OpenAI GPT-4o
 - **セキュリティ重視**: ローカルLLM（Ollama）
 
 ### 3. スキル活用
+
 ```
 # 基本的なワークフロー
 "プロジェクトを分析して" → ファイル構造把握
-"コードをレビューして" → 品質・セキュリティチェック  
+"コードをレビューして" → 品質・セキュリティチェック
 "コミットメッセージ生成" → 規約準拠メッセージ作成
 "デプロイ準備チェック" → 本番環境対応確認
 ```

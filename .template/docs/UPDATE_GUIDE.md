@@ -7,6 +7,7 @@ AI Harness Template から作成したプロジェクトを、安全に最新版
 ## 🚀 Quick Start - クイックスタート
 
 ### 基本的な更新フロー
+
 ```bash
 # 1. 更新確認
 ./scripts/update-template.sh check
@@ -21,12 +22,14 @@ AI Harness Template から作成したプロジェクトを、安全に最新版
 ## 📋 事前準備 - Prerequisites
 
 ### ✅ 必須チェックリスト
+
 - [ ] 全ての変更をコミット済み
 - [ ] 作業ブランチから main/master に移動
 - [ ] 重要な設定ファイルのバックアップ
 - [ ] インターネット接続が安定
 
 ### 🔍 準備コマンド
+
 ```bash
 # 作業状態確認
 git status
@@ -44,12 +47,14 @@ git checkout main
 ### Method 1: 自動更新（推奨）
 
 **完全自動でリスクが最小:**
+
 ```bash
 # アップデート実行
 ./scripts/update-template.sh update
 ```
 
 **実行内容:**
+
 1. 📋 Git状態チェック
 2. 🔗 テンプレートリモート設定
 3. ⬇️ 最新版取得
@@ -60,6 +65,7 @@ git checkout main
 ### Method 2: 段階的更新
 
 **より慎重にステップバイステップ:**
+
 ```bash
 # 1. 更新チェックのみ
 ./scripts/update-template.sh check
@@ -77,6 +83,7 @@ cp .ai-guidance/harness.yaml .ai-guidance/harness.yaml.backup
 ### Method 3: 手動マージ
 
 **高度なカスタマイズがある場合:**
+
 ```bash
 # 1. テンプレートリモート追加
 git remote add template https://github.com/fjmrytfjsn/ai-harness-template.git
@@ -102,6 +109,7 @@ git merge template-merge --no-ff
 ## 🛡️ 安全機能 - Safety Features
 
 ### 自動バックアップ
+
 ```bash
 # バックアップ内容
 .template-backups/
@@ -117,14 +125,18 @@ git merge template-merge --no-ff
 ```
 
 ### 競合検出
+
 システムが自動的に競合の可能性をチェック:
+
 - `.ai-guidance/harness.yaml` - プロジェクト設定
 - `README.md` - プロジェクト説明
 - `.devcontainer/devcontainer.json` - 環境設定
 - カスタマイズしたスキルファイル
 
 ### 保護されるファイル
+
 以下は更新時に**保護**され、上書きされません:
+
 - プロジェクト固有の設定
 - `.env` 環境変数
 - `*.custom.*` パターンのファイル
@@ -133,21 +145,23 @@ git merge template-merge --no-ff
 ## 🔧 カスタマイズの保持 - Preserving Customizations
 
 ### 設定ファイル
+
 ```yaml
 # .ai-guidance/harness.yaml
 project:
-  name: "my-custom-project"    # ← 保持される
-  description: "カスタム説明"    # ← 保持される
+  name: "my-custom-project" # ← 保持される
+  description: "カスタム説明" # ← 保持される
 
 harness:
   # 新機能が自動追加される
-  new_feature: true           # ← 自動追加
-  
+  new_feature: true # ← 自動追加
+
   # 既存設定は保持
-  middleware: ["custom"]      # ← 保持される
+  middleware: ["custom"] # ← 保持される
 ```
 
 ### カスタムスキル
+
 ```python
 # .ai-guidance/skills/my_custom_skill.py
 # ← このファイルは完全に保持される
@@ -157,21 +171,25 @@ harness:
 ```
 
 ### ドキュメント
+
 ```markdown
 # README.md
 
 # My Project ← プロジェクト名は保持
 
 ## Custom Section ← カスタム章は保持
+
 ...
 
 ## Template Features ← テンプレート部分は更新
+
 ...
 ```
 
 ## 📊 更新内容の確認 - Reviewing Updates
 
 ### 変更内容の確認
+
 ```bash
 # アップデート前に変更内容確認
 ./scripts/update-template.sh check
@@ -186,21 +204,25 @@ git diff HEAD template/main -- .ai-guidance/
 ### 主な更新カテゴリ
 
 #### 🆕 新機能追加
+
 - 新しいスキルの追加
 - Dashboard の機能拡張
 - OpenCode Web の新機能対応
 
 #### 🐛 バグ修正
+
 - 認証エラーの解決
 - パフォーマンスの改善
 - 互換性の向上
 
 #### 🔒 セキュリティ更新
+
 - 依存関係の更新
 - セキュリティホールの修正
 - ベストプラクティスの適用
 
 #### 📚 ドキュメント改善
+
 - 使用方法の明確化
 - トラブルシューティング追加
 - FAQ の更新
@@ -208,6 +230,7 @@ git diff HEAD template/main -- .ai-guidance/
 ## 🚨 トラブルシューティング - Troubleshooting
 
 ### 競合が発生した場合
+
 ```bash
 # 競合ファイルの確認
 git status
@@ -224,6 +247,7 @@ git commit -m "resolve: テンプレート更新の競合を解決"
 ```
 
 ### 更新に失敗した場合
+
 ```bash
 # 1. 現在の状態確認
 git status
@@ -243,6 +267,7 @@ git branch -D template-update
 ### よくある問題と解決策
 
 #### "未コミットの変更があります"
+
 ```bash
 # 作業を保存
 git stash push -m "更新前の一時保存"
@@ -255,6 +280,7 @@ git stash pop
 ```
 
 #### "テンプレートリモートが見つかりません"
+
 ```bash
 # 手動でリモート追加
 git remote add template https://github.com/fjmrytfjsn/ai-harness-template.git
@@ -264,6 +290,7 @@ git remote add template https://github.com/fjmrytfjsn/ai-harness-template.git
 ```
 
 #### "ネットワークエラー"
+
 ```bash
 # プロキシ設定確認
 git config --global http.proxy
@@ -278,6 +305,7 @@ curl -I https://github.com
 ## 📈 更新後の検証 - Post-Update Validation
 
 ### 動作確認チェックリスト
+
 ```bash
 # ✅ 基本機能確認
 ./scripts/dashboard.sh status
@@ -286,7 +314,7 @@ curl -I https://github.com
 # ✅ OpenCode Web 起動確認
 npx opencode-ai web --version
 
-# ✅ AI Harness 設定確認  
+# ✅ AI Harness 設定確認
 cat .ai-guidance/harness.yaml
 
 # ✅ 依存関係確認
@@ -295,6 +323,7 @@ npm list -g opencode-ai
 ```
 
 ### パフォーマンステスト
+
 ```bash
 # Dashboard起動時間測定
 time ./scripts/dashboard.sh start
@@ -309,15 +338,18 @@ time ./scripts/dashboard.sh start
 ## 🔄 定期更新の推奨 - Recommended Update Schedule
 
 ### 個人開発プロジェクト
+
 - **月1回**: 機能更新とセキュリティパッチ
 - **即座**: 重大なセキュリティ修正
 
 ### チーム開発プロジェクト
+
 - **四半期ごと**: 計画的な機能更新
 - **月1回**: セキュリティ更新のチェック
 - **即座**: 重大なバグ修正
 
 ### プロダクション環境
+
 - **半年ごと**: メジャーアップデート
 - **月1回**: セキュリティパッチ確認
 - **テスト環境で先行検証**: 本番適用前の十分な検証
@@ -325,12 +357,14 @@ time ./scripts/dashboard.sh start
 ## 🤝 コミュニティサポート - Community Support
 
 ### ヘルプの取得
+
 - 📖 **Documentation**: [docs/](docs/) ディレクトリ
 - 🐛 **Issues**: GitHub Issues で問題報告
 - 💬 **Discussions**: GitHub Discussions で質問
 - 📧 **Direct**: メンテナーへの直接連絡
 
 ### 貢献方法
+
 - 🔧 **Bug Reports**: 問題の詳細報告
 - 💡 **Feature Requests**: 新機能の提案
 - 📝 **Documentation**: ドキュメントの改善

@@ -28,11 +28,13 @@
 ### 1. このテンプレートを使用
 
 **GitHub Web UI（推奨）:**
+
 1. [Use this template](https://github.com/fjmrytfjsn/ai-harness-template) ボタンをクリック
 2. 新しいリポジトリ名を入力
 3. "Create repository from template" をクリック
 
 **GitHub CLI:**
+
 ```bash
 gh repo create my-project --template fjmrytfjsn/ai-harness-template
 cd my-project
@@ -41,6 +43,7 @@ cd my-project
 ### 2. 開発環境を起動
 
 **GitHub Codespaces（推奨）:**
+
 1. リポジトリページで "Code" → "Codespaces" → "Create codespace"
 2. **環境が完全自動セットアップされます**（約2-3分）
    - OpenCode Web 自動インストール・起動
@@ -49,6 +52,7 @@ cd my-project
 3. **即座に利用開始可能** - 追加設定不要！
 
 **ローカル Dev Container:**
+
 ```bash
 # VS Code でリポジトリを開く
 code my-project
@@ -58,6 +62,7 @@ code my-project
 ### 3. 🎉 すぐに AI コーディング開始！
 
 **完全自動セットアップ完了！**
+
 - ✅ **プロジェクト初期化済み** - GitHubユーザー名で自動設定
 - ✅ **OpenCode Web 利用可能** - ポート3000で即アクセス
 - ✅ **AI Harness Dashboard 起動** - ポート8000でリアルタイム監視
@@ -65,6 +70,7 @@ code my-project
 - ✅ **認証エラー対策済み** - QUICK_FIX.md で即解決
 
 **利用方法:**
+
 ```bash
 # VS Code の 'PORTS' タブから各サービスにアクセス:
 # ポート 3000: OpenCode Web (AI コーディング)
@@ -74,17 +80,19 @@ code my-project
 ### 4. 📊 AI Harness Dashboard
 
 **リアルタイム監視・管理機能:**
+
 - 🏃 **システム状態**: 稼働時間、リクエスト数、エラー率
 - ⚡ **ハーネス情報**: スキル数、ミドルウェア数、設定状況
 - 📈 **パフォーマンス**: レスポンス時間、メモリ使用量
 - 📋 **アクティビティログ**: リアルタイム操作履歴
 
 **Dashboard管理コマンド:**
+
 ```bash
 # Dashboard 起動
 ./scripts/dashboard.sh start
 
-# 状態確認  
+# 状態確認
 ./scripts/dashboard.sh status
 
 # ログ確認
@@ -97,38 +105,43 @@ code my-project
 ### 5. 高度な機能をフル活用
 
 **OpenCode Web から:**
+
 ```
 このプロジェクトのコードをレビューして
-コミットメッセージを生成して  
+コミットメッセージを生成して
 セキュリティ問題をチェックして
 ```
 
 **AI Harness スキルも自動利用可能:**
+
 - 🔍 高度コードレビュー（セキュリティ・パフォーマンス分析）
 - 📝 従来型コミットメッセージ生成
 - 📊 ファイル品質分析（AST解析）
   name: "my-project"
-  type: "web_development"  # ツール選択やミドルウェアに影響
+  type: "web_development" # ツール選択やミドルウェアに影響
 
 harness:
-  middleware: ["context", "tools", "memory", "security"]
-  skills:
-    loading: "dynamic"  # スキルをオンデマンドで読み込み
-  mcp:
-    enabled: true
-    servers: ["github", "playwright"]
+middleware: ["context", "tools", "memory", "security"]
+skills:
+loading: "dynamic" # スキルをオンデマンドで読み込み
+mcp:
+enabled: true
+servers: ["github", "playwright"]
+
 ```
 
 ## ディレクトリ構成
 
 ```
+
 .ai-guidance/
-├── harness.yaml           # メイン設定
-├── middleware/            # ミドルウェアコンポーネント
-├── skills/               # 動的スキル
-├── mcp/                  # MCP統合
-└── memory/               # 永続的な知識
-```
+├── harness.yaml # メイン設定
+├── middleware/ # ミドルウェアコンポーネント
+├── skills/ # 動的スキル
+├── mcp/ # MCP統合
+└── memory/ # 永続的な知識
+
+````
 
 ## 主要コンポーネント
 
@@ -174,9 +187,10 @@ harness:
   middleware: ["context", "tools"]
   skills:
     loading: "auto"  # 必要なスキルを自動検出・読み込み
-```
+````
 
 ### フル機能設定
+
 ```yaml
 # harness.yaml - 本番構成
 project:
@@ -211,6 +225,7 @@ harness:
 ## 使用パターン
 
 ### 1. **開発ワークフロー**
+
 ```python
 # エージェントが必要なスキルとツールを自動読み込み
 agent = HarnessAgent.from_config(".ai-guidance/harness.yaml")
@@ -222,6 +237,7 @@ await agent.run("ドキュメントを更新して")           # -> docs_generat
 ```
 
 ### 2. **カスタムミドルウェア**
+
 ```python
 # project_middleware.py
 @middleware("project_context")
@@ -235,6 +251,7 @@ class ProjectContextMiddleware:
 ```
 
 ### 3. **カスタムスキル**
+
 ```python
 # skills/deploy.py
 @skill(
@@ -264,6 +281,7 @@ async def deploy_application(target="staging", **kwargs):
 ## 従来手法からの移行
 
 ### AGENTS.md から
+
 ```yaml
 # 従来の AGENTS.md の境界がミドルウェア設定に
 harness:
@@ -274,6 +292,7 @@ harness:
 ```
 
 ### 静的指示から
+
 ```yaml
 # 動的スキルが静的指示を置き換え
 skills:
@@ -289,15 +308,17 @@ skills:
 ## アーキテクチャの利点
 
 ### 従来のコンテキストエンジニアリング vs ハーネスエンジニアリング
-| 側面 | コンテキストエンジニアリング | ハーネスエンジニアリング |
-|------|---------------------------|------------------------|
-| **アプローチ** | 静的プロンプト最適化 | 動的システムオーケストレーション |
-| **スケーラビリティ** | コンテキストウィンドウで制限 | 動的読み込みで無制限 |
-| **保守性** | 手動プロンプト更新 | 自動コンポーネント管理 |
-| **統合** | ツール毎にカスタム実装 | MCP による標準化 |
-| **パフォーマンス** | 複雑さで劣化 | 複雑さでスケール |
+
+| 側面                 | コンテキストエンジニアリング | ハーネスエンジニアリング         |
+| -------------------- | ---------------------------- | -------------------------------- |
+| **アプローチ**       | 静的プロンプト最適化         | 動的システムオーケストレーション |
+| **スケーラビリティ** | コンテキストウィンドウで制限 | 動的読み込みで無制限             |
+| **保守性**           | 手動プロンプト更新           | 自動コンポーネント管理           |
+| **統合**             | ツール毎にカスタム実装       | MCP による標準化                 |
+| **パフォーマンス**   | 複雑さで劣化                 | 複雑さでスケール                 |
 
 ### 実世界での影響
+
 - **トークン効率**: コンテキスト使用量 70% 削減
 - **応答速度**: 並列ツール実行で 3倍高速化
 - **保守性**: 手動設定 80% 削減

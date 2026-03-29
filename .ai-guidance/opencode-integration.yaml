@@ -4,19 +4,19 @@
 providers:
   # デフォルト: 未設定（ユーザーが選択するまで無効）
   default: null
-  
+
   # 利用可能なプロバイダー
   available:
     github-copilot:
       name: "GitHub Copilot"
       models: ["gpt-4", "gpt-4o", "gpt-3.5-turbo"]
       auth: "github_token"
-      
+
     openai:
       name: "OpenAI"
       models: ["gpt-4", "gpt-4o", "gpt-3.5-turbo"]
       auth: "api_key"
-      
+
     anthropic:
       name: "Anthropic"
       models: ["claude-3.5-sonnet", "claude-3-opus", "claude-3-haiku"]
@@ -26,21 +26,21 @@ providers:
 harness_integration:
   # OpenCode からの AI Harness スキル呼び出し
   enable_skills: true
-  
+
   # 使用可能なスキル
   available_skills:
     - name: "code_review"
       description: "高度なコードレビュー（セキュリティ・パフォーマンス分析含む）"
       command: "python .ai-guidance/skills/code_review.py"
-      
+
     - name: "commit_message"
       description: "従来型コミット形式でメッセージ生成"
       command: "python -c 'from ai_guidance.skills.commit_message import generate; generate()'"
-      
-    - name: "file_analyzer"  
+
+    - name: "file_analyzer"
       description: "ファイル品質分析（AST解析・複雑度計算）"
       command: "python .ai-guidance/skills/file_analyzer.py"
-  
+
   # ミドルウェア統合
   middleware_hooks:
     before_response: ".ai-guidance/middleware/security.py:pii_filter"
@@ -53,11 +53,11 @@ ui_customization:
     - name: "🔍 Harness Code Review"
       description: "AI Harness の高度コードレビューを実行"
       command: "code_review"
-      
+
     - name: "📝 Generate Commit Message"
       description: "変更内容から適切なコミットメッセージを生成"
       command: "commit_message"
-      
+
     - name: "📊 Analyze File Quality"
       description: "ファイルの品質メトリクスを分析"
       command: "file_analyzer"
@@ -68,11 +68,11 @@ auto_features:
   on_project_load:
     - analyze_structure: true
     - load_harness_config: true
-    - setup_provider: false  # プロバイダー自動設定無効
-  
-  # ファイル変更時の自動実行  
+    - setup_provider: false # プロバイダー自動設定無効
+
+  # ファイル変更時の自動実行
   on_file_change:
-    - auto_review: false  # 必要に応じて true に
+    - auto_review: false # 必要に応じて true に
     - syntax_check: true
 
 # 🚀 プロバイダー設定手順
@@ -85,7 +85,7 @@ auto_features:
 #    環境変数: GITHUB_TOKEN=ghp_xxxx
 #
 # 2️⃣ OpenAI を使用:
-#    providers.default: "openai" 
+#    providers.default: "openai"
 #    環境変数: OPENAI_API_KEY=sk-xxxx
 #
 # 3️⃣ Anthropic を使用:

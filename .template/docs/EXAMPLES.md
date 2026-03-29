@@ -11,7 +11,7 @@
 project:
   name: "my-web-app"
   type: "web-application"
-  
+
 ai:
   provider: "github-copilot"
   model: "gpt-4o"
@@ -21,7 +21,7 @@ skills:
     - code_review
     - security_check
     - performance_analysis
-  
+
   custom:
     - name: "react_component_review"
       description: "React コンポーネントの品質チェック"
@@ -34,12 +34,12 @@ skills:
 project:
   name: "my-api-server"
   type: "api-server"
-  
+
 middleware:
   stack:
-    - security      # API セキュリティ特化
-    - performance   # レスポンス時間最適化
-    - monitoring    # API メトリクス収集
+    - security # API セキュリティ特化
+    - performance # レスポンス時間最適化
+    - monitoring # API メトリクス収集
 
 skills:
   enable:
@@ -54,17 +54,17 @@ skills:
 project:
   name: "data-analysis"
   type: "data-science"
-  
+
 ai:
   provider: "openai"
   model: "gpt-4o"
-  
+
 skills:
   enable:
     - code_review
     - data_validation
     - visualization_check
-    
+
   custom:
     - name: "notebook_review"
       description: "Jupyter Notebook の品質チェック"
@@ -81,15 +81,15 @@ harness:
     max_iterations: 30
     timeout_seconds: 120
     enable_parallel_tools: true
-    
+
 middleware:
   stack:
     - context
     - tools
-    - monitoring   # 最低限のスタック
-    
+    - monitoring # 最低限のスタック
+
 ai:
-  provider: "github-copilot"  # 開発効率最優先
+  provider: "github-copilot" # 開発効率最優先
 ```
 
 ### エンタープライズ（セキュリティ・監査重視）
@@ -100,16 +100,16 @@ harness:
     max_iterations: 50
     timeout_seconds: 300
     enable_audit_log: true
-    
+
 middleware:
   stack:
-    - security     # 必須
+    - security # 必須
     - context
     - memory
     - tools
     - monitoring
-    - audit        # 監査ログ
-    
+    - audit # 監査ログ
+
 security:
   pii_detection: true
   access_control: "strict"
@@ -121,13 +121,13 @@ security:
 ```yaml
 project:
   type: "open-source"
-  
+
 skills:
   enable:
     - code_review
     - commit_message
     - contribution_guide
-    
+
   custom:
     - name: "license_check"
       description: "ライセンス互換性チェック"
@@ -146,8 +146,8 @@ harness:
   agent_loop:
     enable_debug: true
     log_level: "DEBUG"
-    enable_self_verification: false  # 高速化
-    
+    enable_self_verification: false # 高速化
+
 monitoring:
   enable_detailed_logs: true
   performance_tracking: false
@@ -163,7 +163,7 @@ harness:
     enable_debug: false
     log_level: "INFO"
     enable_self_verification: true
-    
+
 monitoring:
   enable_detailed_logs: true
   performance_tracking: true
@@ -182,12 +182,12 @@ harness:
     log_level: "WARN"
     enable_self_verification: true
     enable_circuit_breaker: true
-    
+
 security:
   strict_mode: true
   pii_redaction: true
   access_logging: "detailed"
-  
+
 monitoring:
   enable_metrics: true
   enable_alerting: true
@@ -247,7 +247,7 @@ middleware:
     cache_ttl_seconds: 3600
     enable_parallel_execution: true
     max_concurrent_tools: 5
-    
+
   context:
     max_context_tokens: 8000
     enable_smart_truncation: true
@@ -265,7 +265,7 @@ middleware:
       - "email"
       - "phone_number"
       - "custom_patterns": ["内部ID: [A-Z0-9]+"]
-    
+
     access_control:
       require_authentication: true
       allowed_operations: ["read", "analyze"]

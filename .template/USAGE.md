@@ -53,6 +53,7 @@ git add .
 ```
 
 自動実行される処理：
+
 1. `git diff --staged` で変更を取得
 2. セキュリティ、パフォーマンス、品質を分析
 3. 日本語で改善提案を出力
@@ -65,6 +66,7 @@ git add .
 ```
 
 実行される処理：
+
 1. 変更内容を分析
 2. 従来型コミット形式でメッセージ生成
 3. 適切なタイプ（feat/fix/docs等）を自動判定
@@ -76,6 +78,7 @@ git add .
 ```
 
 実行される処理：
+
 1. ソースファイルを自動検索
 2. 言語別統計、複雑度分析
 3. 品質課題の検出とレポート生成
@@ -88,18 +91,18 @@ git add .
 # .ai-guidance/harness.yaml
 project:
   name: "your-project-name"
-  languages: ["Python", "TypeScript"]  # 主要言語
+  languages: ["Python", "TypeScript"] # 主要言語
 
 # スキル設定をカスタマイズ
 skills:
   overrides:
     code_review:
-      max_line_length: 120      # プロジェクト標準に合わせて調整
-      check_security: true      # セキュリティチェック有効化
+      max_line_length: 120 # プロジェクト標準に合わせて調整
+      check_security: true # セキュリティチェック有効化
 
     file_analyzer:
-      max_complexity: 15        # 複雑度の閾値調整
-      exclude_patterns:         # 除外パターン追加
+      max_complexity: 15 # 複雑度の閾値調整
+      exclude_patterns: # 除外パターン追加
         - "*/generated/*"
         - "*/migrations/*"
 ```
@@ -111,14 +114,14 @@ skills:
 middleware:
   - name: "logging"
     config:
-      log_level: "DEBUG"        # 開発時は DEBUG
+      log_level: "DEBUG" # 開発時は DEBUG
       log_to_file: true
-      include_prompts: false    # プロンプトをログに含めない
+      include_prompts: false # プロンプトをログに含めない
 
   - name: "security"
     config:
-      mask_pii: true           # PII自動マスク
-      max_requests_per_minute: 30  # レート制限調整
+      mask_pii: true # PII自動マスク
+      max_requests_per_minute: 30 # レート制限調整
 ```
 
 ### MCP統合設定
@@ -129,12 +132,12 @@ mcp_servers:
   github:
     enabled: true
     config:
-      token: "${GITHUB_TOKEN}"   # 環境変数から取得
+      token: "${GITHUB_TOKEN}" # 環境変数から取得
       rate_limit: 5000
 
   # Playwright（ウェブ自動化）
   playwright:
-    enabled: false              # 必要時のみ有効化
+    enabled: false # 必要時のみ有効化
 ```
 
 ## 🔧 カスタムスキル作成
@@ -242,6 +245,7 @@ cat .ai-guidance/logs/harness.log | jq '.structured_data'
 ### パフォーマンス分析
 
 ログから自動的に収集されるメトリクス：
+
 - スキル実行時間
 - ツール使用統計
 - エラー発生率
@@ -260,7 +264,7 @@ middleware:
   - name: "logging"
     config:
       log_level: "DEBUG"
-      include_prompts: true      # デバッグ時のみ有効化
+      include_prompts: true # デバッグ時のみ有効化
       include_responses: true
 ```
 
@@ -290,7 +294,7 @@ middleware:
       protected_paths:
         - "/etc/"
         - "/home/user/.ssh/"
-        - "config/secrets/"       # プロジェクト固有
+        - "config/secrets/" # プロジェクト固有
 
       allowed_extensions:
         - ".py"
@@ -322,9 +326,9 @@ environment: "production"
 middleware:
   - name: "logging"
     config:
-      log_level: "INFO"          # INFO以上のみ
+      log_level: "INFO" # INFO以上のみ
       log_to_file: true
-      include_prompts: false     # 本番では無効化
+      include_prompts: false # 本番では無効化
 
   - name: "security"
     config:
@@ -333,8 +337,8 @@ middleware:
 
 skills:
   loading:
-    max_loaded: 5               # メモリ使用量制限
-    timeout_seconds: 180        # タイムアウト短縮
+    max_loaded: 5 # メモリ使用量制限
+    timeout_seconds: 180 # タイムアウト短縮
 
 # 本番用スキルのみ有効化
 enabled_skills:
@@ -342,7 +346,7 @@ enabled_skills:
   - "commit_message"
 
 disabled_skills:
-  - "debug_analyzer"           # デバッグ用スキルを無効化
+  - "debug_analyzer" # デバッグ用スキルを無効化
 ```
 
 ### 環境変数設定
@@ -389,12 +393,12 @@ jobs:
 # 高パフォーマンス設定
 skills:
   loading:
-    lazy_loading: true          # 遅延ロード有効
-    max_loaded: 10             # 適切なキャッシュサイズ
+    lazy_loading: true # 遅延ロード有効
+    max_loaded: 10 # 適切なキャッシュサイズ
 
   execution:
-    parallel_execution: true    # 並列実行有効
-    max_parallel: 5            # CPUコア数に応じて調整
+    parallel_execution: true # 並列実行有効
+    max_parallel: 5 # CPUコア数に応じて調整
 ```
 
 ### メモリ管理
@@ -452,7 +456,8 @@ class RobustSkill(Skill):
 # デバッグ設定で原因調査
 debug:
   enabled: true
-  skill_discovery: true        # スキル発見過程をログ出力
+  skill_discovery: true # スキル発見過程をログ出力
+
 
 # ログ確認
 # "スキル検索" または "skill_discovery" でログ検索
@@ -474,8 +479,8 @@ grep "slow_execution" .ai-guidance/logs/harness.log
 # メモリ使用量制限
 skills:
   loading:
-    max_loaded: 3              # 同時ロード数削減
-    memory_limit_mb: 512       # メモリ制限設定
+    max_loaded: 3 # 同時ロード数削減
+    memory_limit_mb: 512 # メモリ制限設定
 ```
 
 ### ログ分析
@@ -513,6 +518,7 @@ awk '/duration/ {sum+=$NF; count++} END {print "平均実行時間:", sum/count}
 ## 🆘 サポート
 
 問題や質問がある場合：
+
 1. まずログファイルを確認
 2. デバッグモードで詳細情報収集
 3. GitHub Issuesで報告
