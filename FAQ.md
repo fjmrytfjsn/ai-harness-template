@@ -86,18 +86,100 @@ MCP (Model Context Protocol) 経由の外部統合のみネットワークが必
 
 ## 📊 実用性の質問
 
-### Q: どんなプロジェクトに適していますか？
+### ❌ Q: OpenCode Web で「401 Unauthorized」エラーが出ます
 
-**A:** 幅広いプロジェクトタイプに対応：
+**A:** 最も一般的な問題はGitHub Copilot APIの認証不足です：
 
-✅ **最適**:
-- Web開発（React, Vue, Angular）
-- バックエンドAPI（Node.js, Python, Go）
-- モバイルアプリ（React Native, Flutter）
-- データサイエンス（Python, Jupyter）
+**診断手順**:
+1. GitHub Copilot サブスクリプション確認
+2. Personal Access Token の権限確認
+3. API キーの有効性確認
 
-△ **部分的に有効**:
-- レガシーシステム（設定に工夫が必要）
+**解決策**:
+
+**方法1: GitHub Copilot API 設定**
+```bash
+# 1. Personal Access Token 作成（GitHub Settings）
+# 必要スコープ: repo, copilot, read:user
+
+# 2. .env ファイル作成
+cat > .env << 'EOF'
+GITHUB_TOKEN=ghp_your_personal_access_token_here
+COPILOT_API_KEY=your_copilot_api_key_here
+EOF
+
+# 3. OpenCode Web 再起動
+npx opencode-ai web --port 3000
+```
+
+**方法2: OpenAI API 利用**
+```bash
+# .env に追加
+echo "OPENAI_API_KEY=sk-your-openai-key" >> .env
+
+# プロバイダー変更（.ai-guidance/opencode-integration.yaml）
+# default_provider: "openai"
+```
+
+**方法3: ローカル LLM 利用**
+```bash
+# Ollama セットアップ
+ollama pull codellama:7b
+# プロバイダー設定: "ollama"
+```
+
+**根本原因**: 
+- GitHub Codespaces の制限付きトークンではCopilot APIにアクセスできません
+- Personal Access Token またはAPI キーが必須です
+
+**参考**: [詳細なトラブルシューティング](docs/OPENCODE_INTEGRATION.md#🔧-トラブルシューティング)
+
+### Q: GitHub Codespaces でポートが開けません
+
+**A:** Codespaces のポートフォワーディング設定を確認：
+
+```bash
+# ポート状況確認
+gh codespace ports
+
+# 手動ポート公開
+gh codespace ports --port 3000 --visibility public
+
+# DevContainer 設定確認
+# .devcontainer/devcontainer.json の forwardPorts
+```
+
+### Q: dotfiles インストールが失敗します
+
+**A:** 最近修正済みの問題です：
+
+```bash
+# 最新の dotfiles を確認
+git clone https://github.com/fjmrytfjsn/dotfiles
+cd dotfiles && ./setup.sh
+
+# エラー詳細確認
+tail -f ~/.setup.log
+```
+
+**修正内容**:
+- `.zshrc` ファイル不足の解決
+- エラー処理の改善（個別スクリプト失敗時も継続）
+
+### Q: AI ハーネスの設定ファイルが見つかりません
+
+**A:** テンプレート初期化スクリプトを実行：
+
+```bash
+# プロジェクト初期化（必須）
+./scripts/initialize-project.sh
+
+# 設定確認
+ls -la .ai-guidance/
+cat .ai-guidance/harness.yaml
+```
+
+**注意**: プレースホルダー（`{{PROJECT_NAME}}` など）は初期化スクリプトで置換されます。
 - 非ソースコードプロジェクト（文書管理等）
 
 ❌ **非推奨**:

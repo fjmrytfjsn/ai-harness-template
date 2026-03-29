@@ -109,6 +109,73 @@ harness:
 
 ## 🔧 トラブルシューティング
 
+### ❌ OpenCode Web 401 認証エラー
+
+**症状**: OpenCode Web にアクセスすると「401 Unauthorized」エラーが表示される
+
+**原因と解決策**:
+
+#### 1. GitHub Copilot API 認証不足（最も一般的）
+
+GitHub Copilot のAPIアクセスには特別な権限が必要です：
+
+```bash
+# 1. GitHub CLI で Copilot 認証確認
+gh auth status --show-token
+
+# 2. Copilot API 有効化（Personal Access Token が必要）
+gh api user/copilot/billing --method GET
+```
+
+**解決方法**:
+```bash
+# .env ファイルを作成（プロジェクトルート）
+cat > .env << 'EOF'
+# GitHub Copilot API アクセス用
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx  # Personal Access Token
+COPILOT_API_KEY=your_copilot_api_key   # Copilot API キー（別途取得）
+EOF
+
+# 環境変数を再読み込み
+source .env
+```
+
+**Personal Access Token の取得手順**:
+1. GitHub → Settings → Developer settings → Personal access tokens
+2. "Generate new token (classic)" を選択
+3. 必要なスコープを選択:
+   - `repo` (リポジトリアクセス)
+   - `copilot` (Copilot API アクセス)
+   - `read:user` (ユーザー情報)
+
+#### 2. OpenAI API を代替利用
+
+GitHub Copilot が利用できない場合は OpenAI API を使用:
+
+```bash
+# .env に OpenAI 設定追加
+echo "OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx" >> .env
+
+# OpenCode Web の設定変更
+# .ai-guidance/opencode-integration.yaml で provider を変更:
+#   default_provider: "openai"  # github-copilot から変更
+```
+
+#### 3. ローカル LLM 利用（オフライン環境）
+
+```bash
+# Ollama インストール・起動
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve
+
+# モデルダウンロード
+ollama pull codellama:7b
+
+# OpenCode Web 設定変更
+# provider: "ollama"
+# model: "codellama:7b"
+```
+
 ### OpenCode Web が起動しない
 
 ```bash
@@ -117,6 +184,9 @@ npx opencode-ai web --port 3000
 
 # ログ確認
 cat .ai-guidance/logs/opencode.log
+
+# ポート確認
+netstat -tlnp | grep 3000
 ```
 
 ### AI Harness スキルが認識されない
@@ -127,12 +197,39 @@ echo $PYTHONPATH
 
 # スキルファイル確認
 ls -la .ai-guidance/skills/
+
+# スキル動作テスト
+python .ai-guidance/skills/code_review.py --test
 ```
 
-### プロバイダー認証エラー
+### DevContainer での起動失敗
 
+```bash
+# DevContainer 再ビルド
+Ctrl+Shift+P → "Dev Containers: Rebuild Container"
+
+# 依存関係手動インストール
+pip install -r .ai-guidance/requirements.txt
+npm install -g opencode-ai
+
+# サービス手動起動
+./.devcontainer/start-services.sh
 ```
-OpenCode Web Settings → AI Provider → 認証情報再入力
+
+### ネットワーク・ポートエラー
+
+```bash
+# ポート競合確認
+sudo lsof -i :3000
+sudo lsof -i :8000
+
+# ファイアウォール確認（Linux）
+sudo ufw status
+sudo ufw allow 3000
+sudo ufw allow 8000
+
+# Codespaces ポートフォワーディング確認
+gh codespace ports
 ```
 
 ## 📊 パフォーマンス最適化
