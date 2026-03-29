@@ -12,7 +12,7 @@
 
 従来のコンテキストエンジニアリングから**ハーネスエンジニアリング**へ。プロジェクト固有のAI機能を高速・安全・効率的に実現します。
 
-## 🚀 クイックスタート
+## ⚡ クイックスタート
 
 ### 1. このテンプレートを使用
 
@@ -27,24 +27,43 @@ gh repo create my-project --template fjmrytfjsn/ai-harness-template
 cd my-project
 ```
 
-### 2. 初期設定（5分）
+### 2. 開発環境を起動
+
+**GitHub Codespaces（推奨）:**
+1. リポジトリページで "Code" → "Codespaces" → "Create codespace"
+2. 環境が自動でセットアップされます（約2-3分）
+3. **OpenCode Web が自動起動** - ポート3000でアクセス可能
+
+**ローカル Dev Container:**
+```bash
+# VS Code でリポジトリを開く
+code my-project
+# Ctrl+Shift+P → "Dev Containers: Reopen in Container"
+```
+
+### 3. 初期設定（5分）
 
 ```bash
 # 初期化スクリプトを実行
-chmod +x scripts/initialize-project.sh
 ./scripts/initialize-project.sh
 
-# 詳細設定は SETUP.md を参照
+# OpenCode Web にアクセス
+# VS Code の 'PORTS' タブ → ポート 3000 → "Open in Browser"
 ```
 
-### 3. 即座に使用開始
+### 4. 即座に AI コーディング開始！
 
-```bash
-# AIエージェント（GitHub Copilot CLI等）から:
-# 「このプロジェクトのコードをレビューして」
-# 「コミットメッセージを生成して」
-# 「セキュリティ問題をチェックして」
+**OpenCode Web から:**
 ```
+このプロジェクトのコードをレビューして
+コミットメッセージを生成して  
+セキュリティ問題をチェックして
+```
+
+**AI Harness スキルも自動利用可能:**
+- 🔍 高度コードレビュー（セキュリティ・パフォーマンス分析）
+- 📝 従来型コミットメッセージ生成
+- 📊 ファイル品質分析（AST解析）
   name: "my-project"
   type: "web_development"  # ツール選択やミドルウェアに影響
 

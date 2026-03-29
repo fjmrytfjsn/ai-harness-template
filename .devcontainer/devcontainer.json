@@ -1,0 +1,59 @@
+{
+  "name": "AI Harness + OpenCode Web Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "installDirectlyFromGitHubRelease": true
+    }
+  },
+  "forwardPorts": [3000, 8000],
+  "portsAttributes": {
+    "3000": {
+      "label": "OpenCode Web",
+      "onAutoForward": "notify",
+      "visibility": "private"
+    },
+    "8000": {
+      "label": "AI Harness Dashboard",
+      "onAutoForward": "silent",
+      "visibility": "private"
+    }
+  },
+  "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/setup.sh",
+  "postStartCommand": "bash ${containerWorkspaceFolder}/.devcontainer/start-services.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "files.watcherExclude": {
+          "**/node_modules/**": true,
+          "**/.ai-guidance/cache/**": true
+        }
+      },
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-json"
+      ]
+    }
+  },
+  "containerEnv": {
+    "OPENCODE_AUTO_START": "true",
+    "AI_HARNESS_ENV": "development",
+    "PYTHONPATH": "${containerWorkspaceFolder}/.ai-guidance"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolder}/.ai-guidance,target=${containerWorkspaceFolder}/.ai-guidance,type=bind",
+    "source=ai-harness-cache,target=${containerWorkspaceFolder}/.ai-guidance/cache,type=volume"
+  ]
+}

@@ -4,6 +4,20 @@
 
 ## ⚡ クイックスタート（5分で完了）
 
+### 0. 開発環境の選択
+
+**🚀 GitHub Codespaces（推奨）:**
+- ブラウザだけで完結
+- OpenCode Web 自動起動
+- 設定済み AI Harness 環境
+
+**💻 ローカル Dev Container:**
+- VS Code + Docker 環境
+- 同等の機能をローカルで実行
+
+**⚙️ 手動セットアップ:**
+- 既存環境にインストール
+
 ### 1. プロジェクト情報の設定
 
 `.ai-guidance/harness.yaml` を編集：
@@ -65,6 +79,32 @@ ai:
 - 組織固有のセキュリティポリシー
 
 ## 🛠️ 詳細設定
+
+### DevContainer 統合機能
+
+このテンプレートには **OpenCode Web** 統合DevContainerが含まれており、以下が自動で設定されます：
+
+#### 🚀 自動起動サービス
+- **OpenCode Web**: ポート3000で自動起動
+- **AI Harness**: 設定済み環境
+- **Python + Node.js**: 必要な実行環境
+
+#### 🔧 プリインストール済み
+- OpenCode AI CLI
+- GitHub Copilot 拡張機能
+- Python AI 関連ライブラリ
+- YAML/JSON エディタ支援
+
+#### 📱 ポートフォワーディング
+- `3000`: OpenCode Web UI
+- `8000`: AI Harness Dashboard（オプション）
+
+#### ⚙️ 環境変数
+```bash
+OPENCODE_AUTO_START=true        # 自動起動有効
+AI_HARNESS_ENV=development      # 開発環境モード
+PYTHONPATH=.ai-guidance         # Python パス設定
+```
 
 ### プロジェクト固有設定
 
