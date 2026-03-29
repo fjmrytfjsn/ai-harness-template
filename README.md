@@ -44,8 +44,11 @@ cd my-project
 
 **GitHub Codespaces（推奨）:**
 1. リポジトリページで "Code" → "Codespaces" → "Create codespace"
-2. 環境が自動でセットアップされます（約2-3分）
-3. **OpenCode Web が自動起動** - ポート3000でアクセス可能
+2. **環境が完全自動セットアップされます**（約2-3分）
+   - OpenCode Web 自動インストール・起動
+   - AI Harness プロジェクト自動初期化
+   - 全ての依存関係自動インストール
+3. **即座に利用開始可能** - 追加設定不要！
 
 **ローカル Dev Container:**
 ```bash
@@ -54,17 +57,21 @@ code my-project
 # Ctrl+Shift+P → "Dev Containers: Reopen in Container"
 ```
 
-### 3. 初期設定（5分）
+### 3. 🎉 すぐに AI コーディング開始！
 
+**完全自動セットアップ完了！**
+- ✅ **プロジェクト初期化済み** - GitHubユーザー名で自動設定
+- ✅ **OpenCode Web 利用可能** - ポート3000で即アクセス
+- ✅ **AI Harness スキル有効** - 高度なコードレビュー等利用可能
+- ✅ **認証エラー対策済み** - QUICK_FIX.md で即解決
+
+**利用方法:**
 ```bash
-# 初期化スクリプトを実行
-./scripts/initialize-project.sh
-
-# OpenCode Web にアクセス
 # VS Code の 'PORTS' タブ → ポート 3000 → "Open in Browser"
+# OpenCode Web が開いたらすぐにAIコーディング可能！
 ```
 
-### 4. 即座に AI コーディング開始！
+### 4. 高度な機能をフル活用
 
 **OpenCode Web から:**
 ```
