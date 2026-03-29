@@ -136,4 +136,9 @@ pip install -r .ai-guidance/requirements.txt
 
 ---
 
-**詳細ドキュメント**: [OpenCode Integration Guide](docs/OPENCODE_INTEGRATION.md)
+**📝 このファイルについて**: このQUICK_FIX.mdはテンプレート固有のガイドファイルです。プロバイダー設定が完了したら削除してかまいません。
+
+```bash
+rm QUICK_FIX.md
+git add . && git commit -m "cleanup: Remove template guide file"
+```

@@ -101,10 +101,58 @@ fi
 echo "✅ 初期化が完了しました!"
 echo ""
 
+# テンプレート固有ファイルの削除
+echo "🗑️ テンプレート固有ファイルを削除中..."
+rm -f TEMPLATE_CLEANUP.md 2>/dev/null
+rm -f scripts/comprehensive-test.sh 2>/dev/null
+rm -f scripts/update-template.sh 2>/dev/null
+rm -f .template-backups/.gitkeep 2>/dev/null
+rmdir .template-backups 2>/dev/null
+rm -f VERSION.md 2>/dev/null
+# QUICK_FIX.md は初回プロバイダー設定まで保持
+
+echo "✅ テンプレート固有ファイル削除完了"
+
+# 変更をコミット
+if [ -d ".git" ]; then
+    echo "📝 プロジェクト初期化をコミット中..."
+    git add .
+    git commit -m "🚀 Initialize project from AI Harness Template
+
+- プロジェクト名: ${PROJECT_NAME:-'New Project'}
+- テンプレート固有ファイル削除完了
+- プロダクション準備完了
+
+From: AI Harness Template
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" -q
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ プロジェクト初期化がコミットされました"
+        
+        # リモートリポジトリがある場合はプッシュを提案
+        if git remote get-url origin >/dev/null 2>&1; then
+            if [ "$AUTO_INIT_MODE" = "true" ]; then
+                echo "📤 リモートリポジトリにプッシュ中..."
+                git push -q && echo "✅ リモートにプッシュ完了" || echo "⚠️  プッシュに失敗（手動で git push してください）"
+            else
+                echo "💡 ヒント: git push でリモートリポジトリに変更をプッシュできます"
+            fi
+        fi
+    else
+        echo "⚠️  コミットをスキップ（変更なし、または git 未初期化）"
+    fi
+else
+    echo "⚠️  Git リポジトリが初期化されていません"
+    echo "💡 ヒント: git init && git add . && git commit -m 'Initial commit' で初期化してください"
+fi
+
+echo ""
+
 if [ "$AUTO_INIT_MODE" = "true" ]; then
-    echo "🎯 環境準備完了:"
+    echo "🎉 セットアップ完了:"
     echo "   ✅ プロジェクト設定済み"
-    echo "   ✅ AI Harness 利用可能"
+    echo "   ✅ テンプレート固有ファイル削除済み"
+    echo "   ✅ 変更をコミット・プッシュ済み"
     echo "   ⚠️  AI プロバイダー未設定"
     echo ""
     echo "📱 利用開始前の設定:"
@@ -113,12 +161,12 @@ if [ "$AUTO_INIT_MODE" = "true" ]; then
     echo "   3. OpenCode Web でAIコーディング開始"
     echo "   4. カスタムスキルが自動利用可能"
 else
-    echo "🔧 次のステップ:"
+    echo "🔧 残りのステップ:"
     echo "1. QUICK_FIX.md で AI プロバイダーを設定（必須）"
-    echo "2. README.md の詳細をカスタマイズ"  
-    echo "3. 不要なファイルを削除"
-    echo "4. git add . && git commit -m \"feat: プロジェクト初期化\""
+    echo "2. README.md をプロジェクト内容に合わせてカスタマイズ"  
+    echo "3. 必要に応じて追加の依存関係やファイルを追加"
     echo ""
+    echo "💡 初期化コミットは自動で作成されました"
     echo "📚 詳細は SETUP.md を参照してください"
 fi
 
