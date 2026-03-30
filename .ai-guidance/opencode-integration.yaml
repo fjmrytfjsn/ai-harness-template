@@ -5,22 +5,8 @@ providers:
   # デフォルト: 未設定（ユーザーが選択するまで無効）
   default: null
 
-  # 利用可能なプロバイダー
-  available:
-    github-copilot:
-      name: "GitHub Copilot"
-      models: ["gpt-4", "gpt-4o", "gpt-3.5-turbo"]
-      auth: "github_token"
-
-    openai:
-      name: "OpenAI"
-      models: ["gpt-4", "gpt-4o", "gpt-3.5-turbo"]
-      auth: "api_key"
-
-    anthropic:
-      name: "Anthropic"
-      models: ["claude-3.5-sonnet", "claude-3-opus", "claude-3-haiku"]
-      auth: "api_key"
+  # 利用可能なプロバイダー（テンプレートでは空。利用する場合はプロジェクト側で追加してください）
+  available: {}
 
 # AI Harness との統合設定
 harness_integration:
@@ -78,18 +64,7 @@ auto_features:
 # 🚀 プロバイダー設定手順
 #
 # このファイルのデフォルトではプロバイダーは未設定です。
-# OpenCode Web を利用するには以下のいずれかを選択して設定してください：
-#
-# 1️⃣ GitHub Copilot を使用:
-#    providers.default: "github-copilot"
-#    環境変数: GITHUB_TOKEN=ghp_xxxx
-#
-# 2️⃣ OpenAI を使用:
-#    providers.default: "openai"
-#    環境変数: OPENAI_API_KEY=sk-xxxx
-#
-# 3️⃣ Anthropic を使用:
-#    providers.default: "anthropic"
-#    環境変数: ANTHROPIC_API_KEY=sk-xxxx
+# OpenCode Web を利用するには、providers.available にプロバイダー定義を追加し、
+# providers.default に使用するプロバイダー名を設定してください。
 #
 # 📖 詳細手順: docs/OPENCODE_INTEGRATION.md または QUICK_FIX.md を参照
