@@ -16,6 +16,7 @@ yarn-error.log*
 .ai-guidance/cache/
 .ai-guidance/logs/
 .ai-guidance/temp/
+.ai-guidance/*.pid
 .template-backups/
 
 # Runtime data
