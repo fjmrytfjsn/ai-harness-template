@@ -13,7 +13,8 @@ echo "📦 Python: $(python --version)"
 
 # OpenCode AI をグローバルインストール
 echo "⬇️  OpenCode AI をインストール中..."
-if npm install -g opencode-ai@latest; then
+OPENCODE_VERSION="${OPENCODE_VERSION:-1.3.9}"
+if npm install -g "opencode-ai@${OPENCODE_VERSION}"; then
     echo "✅ OpenCode AI インストール完了"
 else
     echo "⚠️  OpenCode AI インストール失敗（継続します）"

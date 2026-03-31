@@ -17,6 +17,8 @@ mkdir -p .ai-guidance/temp
 # デフォルトURL（Codespaces時は上書き）
 OPENCODE_URL="http://localhost:3000"
 DASHBOARD_URL="http://localhost:8000"
+OPENCODE_VERSION="${OPENCODE_VERSION:-1.3.9}"
+OPENCODE_STARTUP_TIMEOUT_SECONDS="${OPENCODE_STARTUP_TIMEOUT_SECONDS:-60}"
 
 get_pid_by_port() {
     local port="$1"
@@ -35,6 +37,15 @@ wait_for_port() {
         sleep "$delay"
     done
     return 1
+}
+
+start_opencode_web() {
+    if command -v opencode-ai >/dev/null 2>&1; then
+        nohup opencode-ai web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
+    else
+        # グローバルバイナリが未導入の環境では固定バージョンを npx で起動
+        nohup npx --yes "opencode-ai@${OPENCODE_VERSION}" web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
+    fi
 }
 
 echo "🚀 AI Harness サービスを起動中..."
@@ -58,15 +69,16 @@ if [ "$OPENCODE_AUTO_START" = "true" ]; then
         echo "✅ OpenCode Web は既に起動済みです (PID: $EXISTING_OPENCODE_PID)"
     else
         # OpenCode Web をバックグラウンドで起動
-        nohup npx opencode-ai@latest web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
+        start_opencode_web
         OPENCODE_PID=$!
-        if wait_for_port 3000 15 1; then
+        if wait_for_port 3000 "$OPENCODE_STARTUP_TIMEOUT_SECONDS" 1; then
             ACTIVE_OPENCODE_PID="$(get_pid_by_port 3000)"
             [ -z "$ACTIVE_OPENCODE_PID" ] && ACTIVE_OPENCODE_PID="$OPENCODE_PID"
             echo "$ACTIVE_OPENCODE_PID" > .ai-guidance/opencode.pid
             echo "✅ OpenCode Web 起動完了 (PID: $ACTIVE_OPENCODE_PID)"
         else
             echo "❌ OpenCode Web の起動に失敗しました"
+            echo "   使用バージョン: opencode-ai@$OPENCODE_VERSION"
             echo "   ログ: .ai-guidance/logs/opencode.log"
             exit 1
         fi
@@ -74,7 +86,7 @@ if [ "$OPENCODE_AUTO_START" = "true" ]; then
     
 else
     echo "ℹ️  OpenCode Web 自動起動が無効です"
-    echo "   手動起動: npx opencode-ai web --port 3000"
+    echo "   手動起動: opencode-ai web --port 3000"
 fi
 
 # AI Harness Dashboard の起動
