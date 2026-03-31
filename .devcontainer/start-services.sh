@@ -6,7 +6,8 @@
 set -e
 
 # ワークスペースディレクトリの確認
-WORKSPACE_DIR="${CONTAINERWORKSPACEFOLDER:-$(pwd)}"
+# Dev Containers の環境変数名は containerWorkspaceFolder（小文字始まり）
+WORKSPACE_DIR="${containerWorkspaceFolder:-${CONTAINER_WORKSPACE_FOLDER:-$(pwd)}}"
 cd "$WORKSPACE_DIR"
 
 # 実行時に必要なディレクトリを保証
