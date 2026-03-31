@@ -18,6 +18,14 @@ fi
 WORKSPACE_DIR="${containerWorkspaceFolder:-${CONTAINER_WORKSPACE_FOLDER:-$(pwd)}}"
 cd "$WORKSPACE_DIR"
 
+# .env があれば読み込んで環境変数として展開
+if [ -f ".env" ]; then
+    set -a
+    # shellcheck disable=SC1091
+    . ./.env
+    set +a
+fi
+
 # 実行時に必要なディレクトリを保証
 mkdir -p .ai-guidance/logs
 mkdir -p .ai-guidance/cache

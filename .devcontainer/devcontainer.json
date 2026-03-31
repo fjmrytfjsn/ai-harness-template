@@ -31,9 +31,6 @@
   "initializeCommand": "bash ${localWorkspaceFolder}/.devcontainer/init-ssh-agent.sh",
   "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/setup.sh",
   "postAttachCommand": "bash ${containerWorkspaceFolder}/.devcontainer/start-services.sh",
-  "envFile": [
-    "${localWorkspaceFolder}/.env"
-  ],
   "customizations": {
     "vscode": {
       "settings": {
