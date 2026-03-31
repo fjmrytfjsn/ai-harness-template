@@ -48,6 +48,7 @@ mkdir -p .ai-guidance/temp
 
 # 権限設定
 chmod +x scripts/initialize-project.sh 2>/dev/null || true
+chmod +x scripts/set-env.sh 2>/dev/null || true
 
 # Git 設定（Codespaces/ローカル両対応）
 CURRENT_GIT_NAME="$(git config --get user.name 2>/dev/null || true)"

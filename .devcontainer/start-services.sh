@@ -18,6 +18,11 @@ fi
 WORKSPACE_DIR="${containerWorkspaceFolder:-${CONTAINER_WORKSPACE_FOLDER:-$(pwd)}}"
 cd "$WORKSPACE_DIR"
 
+# .env がなければテンプレートから作成
+if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+    cp .env.example .env
+fi
+
 # .env があれば読み込んで環境変数として展開
 if [ -f ".env" ]; then
     set -a
@@ -114,8 +119,12 @@ if command -v tailscaled >/dev/null 2>&1; then
     fi
 
     if ! pgrep -x tailscaled >/dev/null 2>&1; then
-        sudo -n nohup setsid tailscaled --state="$TS_STATE_DIR/tailscaled.state" --socket="$TS_SOCKET" $TS_TUN_FLAG > "$TS_LOG" 2>&1 & || true
-        sleep 1
+        if sudo -n true 2>/dev/null; then
+            nohup setsid sudo -n tailscaled --state="$TS_STATE_DIR/tailscaled.state" --socket="$TS_SOCKET" $TS_TUN_FLAG > "$TS_LOG" 2>&1 &
+            sleep 1
+        else
+            echo "⚠️  sudo が使えないため tailscaled の起動をスキップします"
+        fi
     fi
 
     if [ -n "${TS_AUTHKEY:-}" ]; then
