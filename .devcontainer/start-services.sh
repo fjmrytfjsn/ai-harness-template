@@ -40,7 +40,11 @@ wait_for_port() {
 }
 
 start_opencode_web() {
-    if command -v opencode-ai >/dev/null 2>&1; then
+    if command -v opencode >/dev/null 2>&1; then
+        # npm install -g opencode-ai が提供する実バイナリは `opencode`
+        nohup opencode web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
+    elif command -v opencode-ai >/dev/null 2>&1; then
+        # 旧環境互換: もし opencode-ai バイナリが存在する場合はそれを利用
         nohup opencode-ai web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
     else
         # グローバルバイナリが未導入の環境では固定バージョンを npx で起動
@@ -86,7 +90,7 @@ if [ "$OPENCODE_AUTO_START" = "true" ]; then
     
 else
     echo "ℹ️  OpenCode Web 自動起動が無効です"
-    echo "   手動起動: opencode-ai web --port 3000"
+    echo "   手動起動: opencode web --port 3000"
 fi
 
 # AI Harness Dashboard の起動
