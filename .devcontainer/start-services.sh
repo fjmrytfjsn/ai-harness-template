@@ -19,6 +19,7 @@ OPENCODE_URL="http://localhost:3000"
 DASHBOARD_URL="http://localhost:8000"
 OPENCODE_VERSION="${OPENCODE_VERSION:-1.3.9}"
 OPENCODE_STARTUP_TIMEOUT_SECONDS="${OPENCODE_STARTUP_TIMEOUT_SECONDS:-60}"
+OPENCODE_START_RETRIES="${OPENCODE_START_RETRIES:-3}"
 
 get_pid_by_port() {
     local port="$1"
@@ -42,6 +43,25 @@ wait_for_port() {
 is_pid_alive() {
     local pid="$1"
     [ -n "$pid" ] && ps -p "$pid" >/dev/null 2>&1
+}
+
+get_opencode_pid() {
+    # まず 3000 を実際に LISTEN している PID を優先
+    local pid=""
+    pid="$(get_pid_by_port 3000)"
+    if [ -n "$pid" ]; then
+        echo "$pid"
+        return 0
+    fi
+
+    # フォールバック: プロセスコマンドから推定
+    pid="$(ps -eo pid=,args= | grep -E '\.opencode web --port 3000' | grep -v grep | awk '{print $1}' | head -n 1)"
+    if [ -n "$pid" ]; then
+        echo "$pid"
+        return 0
+    fi
+
+    ps -eo pid=,args= | grep -E '(/| )opencode web --port 3000' | grep -v grep | awk '{print $1}' | head -n 1
 }
 
 start_opencode_web() {
@@ -72,30 +92,46 @@ if [ "$OPENCODE_AUTO_START" = "true" ]; then
         DASHBOARD_URL="http://localhost:8000"
     fi
 
-    EXISTING_OPENCODE_PID="$(get_pid_by_port 3000)"
-    if [ -n "$EXISTING_OPENCODE_PID" ]; then
+    EXISTING_OPENCODE_PID="$(get_opencode_pid)"
+    if [ -n "$EXISTING_OPENCODE_PID" ] && is_pid_alive "$EXISTING_OPENCODE_PID"; then
         echo "$EXISTING_OPENCODE_PID" > .ai-guidance/opencode.pid
         echo "✅ OpenCode Web は既に起動済みです (PID: $EXISTING_OPENCODE_PID)"
     else
-        # OpenCode Web をバックグラウンドで起動
-        start_opencode_web
-        OPENCODE_PID=$!
-        if wait_for_port 3000 "$OPENCODE_STARTUP_TIMEOUT_SECONDS" 1; then
-            ACTIVE_OPENCODE_PID="$(get_pid_by_port 3000)"
-            [ -z "$ACTIVE_OPENCODE_PID" ] && ACTIVE_OPENCODE_PID="$OPENCODE_PID"
+        rm -f .ai-guidance/opencode.pid
+        START_ATTEMPT=1
+        STARTED=false
 
-            # 瞬間的にポートが開いただけのケースを避けるため、短時間の安定性を確認
-            sleep 2
-            if is_pid_alive "$ACTIVE_OPENCODE_PID" && ss -ltn 2>/dev/null | grep -qE ":3000[[:space:]]"; then
-                echo "$ACTIVE_OPENCODE_PID" > .ai-guidance/opencode.pid
-                echo "✅ OpenCode Web 起動完了 (PID: $ACTIVE_OPENCODE_PID)"
-            else
-                rm -f .ai-guidance/opencode.pid
-                echo "❌ OpenCode Web は起動直後に停止しました"
-                echo "   ログ: .ai-guidance/logs/opencode.log"
-                exit 1
+        while [ "$START_ATTEMPT" -le "$OPENCODE_START_RETRIES" ]; do
+            echo "   OpenCode 起動試行 ${START_ATTEMPT}/${OPENCODE_START_RETRIES}..."
+
+            # OpenCode Web をバックグラウンドで起動
+            start_opencode_web
+            OPENCODE_PID=$!
+
+            if wait_for_port 3000 "$OPENCODE_STARTUP_TIMEOUT_SECONDS" 1; then
+                ACTIVE_OPENCODE_PID="$(get_opencode_pid)"
+                [ -z "$ACTIVE_OPENCODE_PID" ] && ACTIVE_OPENCODE_PID="$OPENCODE_PID"
+
+                # 瞬間的にポートが開いただけのケースを避けるため、短時間の安定性を確認
+                sleep 2
+                if is_pid_alive "$ACTIVE_OPENCODE_PID" && ss -ltn 2>/dev/null | grep -qE ":3000[[:space:]]"; then
+                    echo "$ACTIVE_OPENCODE_PID" > .ai-guidance/opencode.pid
+                    echo "✅ OpenCode Web 起動完了 (PID: $ACTIVE_OPENCODE_PID)"
+                    STARTED=true
+                    break
+                fi
             fi
-        else
+
+            echo "⚠️  OpenCode Web 起動確認に失敗 (試行 ${START_ATTEMPT})"
+            STALE_PID="$(get_opencode_pid)"
+            if [ -n "$STALE_PID" ] && is_pid_alive "$STALE_PID"; then
+                kill "$STALE_PID" 2>/dev/null || true
+            fi
+            sleep 1
+            START_ATTEMPT=$((START_ATTEMPT + 1))
+        done
+
+        if [ "$STARTED" != "true" ]; then
             rm -f .ai-guidance/opencode.pid
             echo "❌ OpenCode Web の起動に失敗しました"
             echo "   使用バージョン: opencode-ai@$OPENCODE_VERSION"
