@@ -1,112 +1,124 @@
-# AI エージェントハーネス テンプレート
+# ai-harness-template
 
-**プロダクション対応AIエージェントハーネス** - 次世代のハーネスエンジニアリング基盤
+AI Harness プロジェクト - 次世代AIエージェント基盤
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Japanese](https://img.shields.io/badge/Language-Japanese-red.svg)](https://github.com/fjmrytfjsn/ai-harness-template)
-[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green.svg)](https://github.com/fjmrytfjsn/ai-harness-template)
+## 🚀 このプロジェクトについて
 
-## 🎯 このテンプレートについて
+このプロジェクトは AI Harness Template から作成されており、以下の機能が利用可能です：
 
-このテンプレートから、**Agent = Model + Harness** 原則に基づく最新のAIエージェント基盤を即座に構築できます。
+- 🤖 **AI エージェントハーネス** - 次世代のハーネスエンジニアリング基盤
+- 📈 **リアルタイム Dashboard** - プロジェクト監視・メトリクス表示
+- 🛡️ **ミドルウェアスタック** - セキュリティ・ログ・パフォーマンス
+- 🔧 **動的スキルシステム** - コードレビュー・ファイル解析
+- 🌐 **OpenCode Web統合** - ブラウザベース AI 開発環境
 
-従来のコンテキストエンジニアリングから**ハーネスエンジニアリング**へ。プロジェクト固有のAI機能を高速・安全・効率的に実現します。
+## ⚠️ 初期設定が必要です
 
-## ⚡ クイックスタート
+**AI プロバイダーの設定**:
+このプロジェクトを使用するには、AIプロバイダーの設定が必要です。
 
-### 1. このテンプレートを使用
+📖 **設定手順**: `QUICK_FIX.md` を参照してください
 
-**GitHub Web UI（推奨）:**
+## 🛠️ 開発開始
 
-1. [Use this template](https://github.com/fjmrytfjsn/ai-harness-template) ボタンをクリック
-2. 新しいリポジトリ名を入力
-3. "Create repository from template" をクリック
-4. **"Open in Codespaces"** をクリック（自動セットアップ開始）
-
-### 2. 初期設定（1分で完了）
-
-Codespaces起動後、以下が自動実行されます：
-
-- ✅ プロジェクト設定・初期化
-- ✅ 依存関係インストール
-- ✅ OpenCode Web 起動
-- ⚠️ **AI プロバイダー設定が必要** → `QUICK_FIX.md` 参照
-
-### 3. AIプロバイダー設定
+### 1. AI プロバイダー設定
 
 ```bash
-# OpenAI使用（最も簡単）
+# OpenAI を使用する場合（推奨）
 echo "OPENAI_API_KEY=sk-your-key" > .env
 sed -i 's/default: null/default: "openai"/' .ai-guidance/opencode-integration.yaml
 ```
 
-### 4. 即座に利用開始
+### 2. OpenCode Web 起動
 
-- 📱 VS Code「PORTS」タブ → ポート3000でOpenCode Web
-- 🤖 AI支援コーディング開始
-- 📊 ポート8080でDashboard監視
+- VS Code の「PORTS」タブ → ポート3000
+- ブラウザで OpenCode Web にアクセス
+- AI 支援付きコーディング開始
 
-## ✨ 主な機能
+### 3. AI Harness 機能
 
-### 🤖 AI エージェントハーネス
+- **🔍 Code Review**: 高度なコード分析
+- **📝 Commit Message**: 適切なコミットメッセージ生成
+- **📊 File Analysis**: ファイル品質メトリクス
 
-- **動的スキルシステム**: コードレビュー・ファイル解析・コミットメッセージ生成
-- **ミドルウェアスタック**: セキュリティ・ログ・パフォーマンス
-- **MCP統合**: GitHub/Playwright等の標準化ツール連携
+## 📊 AI Harness Dashboard
 
-### 📊 リアルタイム監視
+```bash
+# Dashboard 起動
+./scripts/dashboard.sh start
 
-- **AI Harness Dashboard**: システム状態・メトリクス・ログ
-- **プロジェクト分析**: ファイル構造・依存関係・品質指標
-- **パフォーマンス追跡**: レスポンス時間・使用量・エラー率
+# ブラウザで http://localhost:8080 にアクセス
+# リアルタイムメトリクス・ログ・システム状態を監視
+```
 
-### 🌐 OpenCode Web 統合
+## 📁 プロジェクト構造
 
-- **ブラウザベース開発**: VS Code不要の AI コーディング
-- **マルチプロバイダー対応**: OpenAI/Anthropic/Ollama/GitHub Copilot
-- **カスタムコマンド**: プロジェクト固有AI機能の統合
+```
+ai-harness-template/
+├── .ai-guidance/          # AI Harness 設定・スキル・ミドルウェア
+├── .devcontainer/         # 開発環境設定
+├── scripts/               # ユーティリティスクリプト
+└── src/                   # プロジェクトソースコード（追加してください）
+```
 
-### 🔄 安全な更新システム
+## 🔧 カスタマイズ
 
-- **テンプレート更新**: 新機能の自動取り込み
-- **バックアップ・ロールバック**: 安全な実験環境
-- **競合解決**: インテリジェントなマージ戦略
+### AI Harness 設定
 
-## 📋 詳細ドキュメント
+`.ai-guidance/harness.yaml` でプロジェクト固有の設定をカスタマイズできます：
 
-テンプレート使用後、詳細ガイドは `.template/` ディレクトリ内で確認できます：
+```yaml
+project:
+  name: "ai-harness-template"
+  description: "AI Harness プロジェクト - 次世代AIエージェント基盤"
 
-- 📖 [インストールガイド](.template/INSTALLATION.md)
-- 🛠️ [使用方法](.template/USAGE.md)
-- ❓ [FAQ](.template/FAQ.md)
-- 📊 [Dashboard ガイド](.template/docs/DASHBOARD.md)
-- 🔧 [OpenCode統合](.template/docs/OPENCODE_INTEGRATION.md)
+harness:
+  middleware_enabled: true
+  skills_enabled: true
+  auto_review: false # 必要に応じて true に
+```
 
-## 🛡️ セキュリティ・プライバシー
+### 新しいスキルの追加
 
-- 🔒 **PII検出**: 個人情報の自動フィルタリング
-- 🛡️ **セキュアミドルウェア**: 入力検証・出力サニタイズ
-- 📝 **ログ管理**: センシティブ情報の適切な除外
-- 🔑 **認証**: 各プロバイダーの安全な認証フロー
+```bash
+# スキル作成例
+cp .ai-guidance/skills/code_review.py .ai-guidance/skills/my_skill.py
+# my_skill.py をカスタマイズ
+```
 
-## 🌟 企業・チーム利用
+## 🧪 テスト・ビルド・デプロイ
 
-- 👥 **マルチユーザー対応**: チーム開発環境
-- 📊 **使用量追跡**: コスト管理・分析
-- 🔧 **カスタマイズ**: 企業固有要件への対応
-- 🚀 **スケーラビリティ**: 大規模プロジェクト対応
+```bash
+# TODO: プロジェクト固有のコマンドを追加
+npm test      # テスト実行
+npm build     # ビルド
+npm deploy    # デプロイ
+```
 
-## 🤝 コミュニティ・サポート
+## 📚 ドキュメント
 
-- 💬 **Issues**: バグ報告・機能要望
-- 📢 **Discussions**: 使用方法・ベストプラクティス
-- 🔄 **Pull Requests**: 機能改善・修正の貢献
-- 📖 **Wiki**: コミュニティドキュメント
+- [OpenCode Web 統合ガイド](.ai-guidance/docs/opencode-integration.md)
+- [スキル開発ガイド](.ai-guidance/docs/skills-development.md)
+- [ミドルウェア設定](.ai-guidance/docs/middleware-config.md)
+
+## 🤝 貢献
+
+1. このリポジトリをフォーク
+2. 機能ブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'Add amazing feature'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
+5. Pull Request を作成
 
 ## 📄 ライセンス
 
-MIT License - 商用利用・再配布・改変すべて自由
+このプロジェクトは [MIT License](LICENSE) の下でライセンスされています。
+
+## 🎉 AI Harness Template について
+
+このプロジェクトは [AI Harness Template](https://github.com/fjmrytfjsn/ai-harness-template) から作成されました。
+
+最新機能・アップデート情報は元テンプレートリポジトリを参照してください。
 
 ---
 
-🚀 **今すぐ始める**: [Use this template](https://github.com/fjmrytfjsn/ai-harness-template) → Codespaces → 1分でAI開発環境完成！
+**Happy Coding!** 🚀
