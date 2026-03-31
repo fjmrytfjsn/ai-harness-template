@@ -6,6 +6,13 @@ set -e
 echo "🚀 AI Harness + OpenCode Web 環境をセットアップ中..."
 echo "=============================================="
 
+# OpenCode Web の起動に必要なツールを準備
+if ! command -v xdg-open >/dev/null 2>&1; then
+    echo "📦 xdg-utils をインストール中..."
+    sudo apt-get update -y
+    sudo apt-get install -y xdg-utils
+fi
+
 # Node.js とnpmのバージョン確認
 echo "📦 Node.js: $(node --version)"
 echo "📦 npm: $(npm --version)"  
