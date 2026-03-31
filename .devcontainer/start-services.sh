@@ -29,6 +29,9 @@ DASHBOARD_URL="http://localhost:8000"
 OPENCODE_VERSION="${OPENCODE_VERSION:-1.3.9}"
 OPENCODE_STARTUP_TIMEOUT_SECONDS="${OPENCODE_STARTUP_TIMEOUT_SECONDS:-60}"
 OPENCODE_START_RETRIES="${OPENCODE_START_RETRIES:-3}"
+OPENCODE_MONITOR_ENABLED="${OPENCODE_MONITOR_ENABLED:-true}"
+OPENCODE_MONITOR_INTERVAL_SECONDS="${OPENCODE_MONITOR_INTERVAL_SECONDS:-5}"
+OPENCODE_MONITOR_LOG=".ai-guidance/logs/opencode-monitor.log"
 
 get_pid_by_port() {
     local port="$1"
@@ -179,6 +182,22 @@ else
         echo "   ログ: .ai-guidance/logs/dashboard.log"
         exit 1
     fi
+fi
+
+# バックグラウンドプロセスがロックを継承しないようにする
+exec 9>&-
+
+# OpenCode Web の簡易監視（ポートが落ちたら再起動）
+if [ "$OPENCODE_AUTO_START" = "true" ] && [ "$OPENCODE_MONITOR_ENABLED" = "true" ]; then
+    (
+        while true; do
+            if ! ss -ltn 2>/dev/null | grep -qE ":3000[[:space:]]"; then
+                echo "[$(date -Is)] OpenCode が停止しているため再起動します" >> "$OPENCODE_MONITOR_LOG"
+                start_opencode_web
+            fi
+            sleep "$OPENCODE_MONITOR_INTERVAL_SECONDS"
+        done
+    ) >/dev/null 2>&1 &
 fi
 
 # AI Harness 設定の確認
