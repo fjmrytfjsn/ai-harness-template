@@ -17,6 +17,7 @@ fi
 # Dev Containers の環境変数名は containerWorkspaceFolder（小文字始まり）
 WORKSPACE_DIR="${containerWorkspaceFolder:-${CONTAINER_WORKSPACE_FOLDER:-$(pwd)}}"
 cd "$WORKSPACE_DIR"
+PARENT_DIR="$(dirname "$WORKSPACE_DIR")"
 
 # .env がなければテンプレートから作成
 if [ ! -f ".env" ] && [ -f ".env.example" ]; then
@@ -24,8 +25,15 @@ if [ ! -f ".env" ] && [ -f ".env.example" ]; then
 fi
 
 # .tailscale_authKey があれば .env に反映
-if [ -f ".tailscale_authKey" ]; then
-    TS_AUTHKEY_FROM_FILE="$(head -n 1 .tailscale_authKey | tr -d '\r\n')"
+TS_AUTHKEY_FILE=""
+if [ -f "$PARENT_DIR/.tailscale_authKey" ]; then
+    TS_AUTHKEY_FILE="$PARENT_DIR/.tailscale_authKey"
+elif [ -f ".tailscale_authKey" ]; then
+    TS_AUTHKEY_FILE=".tailscale_authKey"
+fi
+
+if [ -n "$TS_AUTHKEY_FILE" ]; then
+    TS_AUTHKEY_FROM_FILE="$(head -n 1 "$TS_AUTHKEY_FILE" | tr -d '\r\n')"
     if [ -n "$TS_AUTHKEY_FROM_FILE" ]; then
         if [ -f ".env" ]; then
             if grep -q '^TS_AUTHKEY=' .env; then

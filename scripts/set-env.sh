@@ -4,6 +4,7 @@ set -e
 
 WORKSPACE_DIR="${containerWorkspaceFolder:-${CONTAINER_WORKSPACE_FOLDER:-$(pwd)}}"
 cd "$WORKSPACE_DIR"
+PARENT_DIR="$(dirname "$WORKSPACE_DIR")"
 
 if [ ! -f ".env" ]; then
     if [ -f ".env.example" ]; then
@@ -13,7 +14,9 @@ if [ ! -f ".env" ]; then
     fi
 fi
 
-if [ -f ".tailscale_authKey" ]; then
+if [ -f "$PARENT_DIR/.tailscale_authKey" ]; then
+    TS_AUTHKEY="$(head -n 1 "$PARENT_DIR/.tailscale_authKey" | tr -d '\r\n')"
+elif [ -f ".tailscale_authKey" ]; then
     TS_AUTHKEY="$(head -n 1 .tailscale_authKey | tr -d '\r\n')"
 fi
 
