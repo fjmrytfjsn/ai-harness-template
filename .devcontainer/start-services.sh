@@ -32,6 +32,10 @@ OPENCODE_START_RETRIES="${OPENCODE_START_RETRIES:-3}"
 OPENCODE_MONITOR_ENABLED="${OPENCODE_MONITOR_ENABLED:-true}"
 OPENCODE_MONITOR_INTERVAL_SECONDS="${OPENCODE_MONITOR_INTERVAL_SECONDS:-5}"
 OPENCODE_MONITOR_LOG=".ai-guidance/logs/opencode-monitor.log"
+TS_STATE_DIR="${TS_STATE_DIR:-.ai-guidance/tailscale}"
+TS_SOCKET="${TS_SOCKET:-/tmp/tailscaled.sock}"
+TS_HOSTNAME="${TS_HOSTNAME:-ai-harness-devcontainer}"
+TS_LOG=".ai-guidance/logs/tailscaled.log"
 
 get_pid_by_port() {
     local port="$1"
@@ -91,6 +95,28 @@ start_opencode_web() {
 }
 
 echo "🚀 AI Harness サービスを起動中..."
+
+# Tailscale の起動（AuthKey があれば自動で参加）
+if command -v tailscaled >/dev/null 2>&1; then
+    mkdir -p "$TS_STATE_DIR"
+
+    TS_TUN_FLAG=""
+    if [ ! -c /dev/net/tun ]; then
+        TS_TUN_FLAG="--tun=userspace-networking"
+    fi
+
+    if ! pgrep -x tailscaled >/dev/null 2>&1; then
+        sudo -n nohup setsid tailscaled --state="$TS_STATE_DIR/tailscaled.state" --socket="$TS_SOCKET" $TS_TUN_FLAG > "$TS_LOG" 2>&1 & || true
+        sleep 1
+    fi
+
+    if [ -n "${TS_AUTHKEY:-}" ]; then
+        sudo -n tailscale --socket="$TS_SOCKET" up --authkey "$TS_AUTHKEY" --hostname "$TS_HOSTNAME" --accept-dns=false || true
+    else
+        echo "ℹ️  TS_AUTHKEY が未設定のため Tailscale 参加をスキップします"
+        echo "   参加するには: export TS_AUTHKEY=tskey-... を設定して再起動してください"
+    fi
+fi
 
 # OpenCode Web の起動
 if [ "$OPENCODE_AUTO_START" = "true" ]; then

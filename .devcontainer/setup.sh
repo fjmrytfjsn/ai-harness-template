@@ -13,6 +13,12 @@ if ! command -v xdg-open >/dev/null 2>&1; then
     sudo apt-get install -y xdg-utils
 fi
 
+# Tailscale をインストール
+if ! command -v tailscale >/dev/null 2>&1; then
+    echo "📦 Tailscale をインストール中..."
+    curl -fsSL https://tailscale.com/install.sh | sh
+fi
+
 # Node.js とnpmのバージョン確認
 echo "📦 Node.js: $(node --version)"
 echo "📦 npm: $(npm --version)"  
