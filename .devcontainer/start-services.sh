@@ -5,6 +5,14 @@
 
 set -e
 
+LOCK_FILE="/tmp/ai-harness-start-services.lock"
+exec 9>"$LOCK_FILE"
+if ! flock -w 120 9; then
+    echo "❌ start-services.sh の排他ロック取得に失敗しました"
+    echo "   既存の起動処理が長時間実行中の可能性があります"
+    exit 1
+fi
+
 # ワークスペースディレクトリの確認
 # Dev Containers の環境変数名は containerWorkspaceFolder（小文字始まり）
 WORKSPACE_DIR="${containerWorkspaceFolder:-${CONTAINER_WORKSPACE_FOLDER:-$(pwd)}}"
