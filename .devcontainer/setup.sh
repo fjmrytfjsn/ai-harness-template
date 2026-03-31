@@ -54,6 +54,33 @@ if [ -z "$CURRENT_GIT_NAME" ] || [ -z "$CURRENT_GIT_EMAIL" ]; then
     echo "📝 Git user を自動設定: $FALLBACK_GIT_NAME <$FALLBACK_GIT_EMAIL>"
 fi
 
+# SSH リモート利用時の事前診断（失敗してもセットアップは継続）
+ORIGIN_URL="$(git config --get remote.origin.url 2>/dev/null || true)"
+if [[ "$ORIGIN_URL" == git@* ]]; then
+    echo "🔐 SSH 認証を診断中..."
+
+    if [ -S "${SSH_AUTH_SOCK:-}" ]; then
+        echo "✅ SSH agent socket を検出: $SSH_AUTH_SOCK"
+    else
+        echo "⚠️  SSH agent socket を検出できません"
+        echo "💡 Dev Container を再起動し、ホスト側で ssh-agent が有効か確認してください"
+    fi
+
+    if ssh-add -l >/dev/null 2>&1; then
+        echo "✅ SSH agent に鍵が登録されています"
+    else
+        echo "⚠️  SSH agent に鍵がありません"
+        echo "💡 ホスト側で 'ssh-add ~/.ssh/<your_key>' を実行してください"
+    fi
+
+    if ssh -T -o BatchMode=yes -o ConnectTimeout=5 git@github.com >/dev/null 2>&1; then
+        echo "✅ GitHub への SSH 到達性を確認しました"
+    else
+        echo "⚠️  GitHub への SSH 接続を確認できませんでした"
+        echo "💡 コンテナ内で 'ssh -T git@github.com' を実行して詳細を確認してください"
+    fi
+fi
+
 echo ""
 echo "🔧 プロジェクト自動初期化を実行中..."
 echo "=============================================="

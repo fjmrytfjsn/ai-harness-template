@@ -152,12 +152,20 @@ Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" 2>&1); the
                 if [ -z "$CURRENT_BRANCH" ]; then
                     echo "⚠️  現在のブランチ名を取得できず、プッシュをスキップしました"
                 else
-                    if PUSH_OUTPUT=$(git push --set-upstream origin "$CURRENT_BRANCH" 2>&1); then
-                        PUSH_SUCCEEDED="true"
-                        echo "✅ リモートにプッシュ完了"
+                    if REMOTE_CHECK_OUTPUT=$(git ls-remote origin HEAD 2>&1); then
+                        if PUSH_OUTPUT=$(git push --set-upstream origin "$CURRENT_BRANCH" 2>&1); then
+                            PUSH_SUCCEEDED="true"
+                            echo "✅ リモートにプッシュ完了"
+                        else
+                            echo "⚠️  プッシュに失敗しました（原因を表示します）"
+                            echo "$PUSH_OUTPUT"
+                            echo "💡 SSH利用時の確認: 'ssh-add -l' と 'ssh -T git@github.com'"
+                            echo "💡 認証設定後に 'git push --set-upstream origin $CURRENT_BRANCH' を実行してください"
+                        fi
                     else
-                        echo "⚠️  プッシュに失敗しました（原因を表示します）"
-                        echo "$PUSH_OUTPUT"
+                        echo "⚠️  リモート到達性の確認に失敗したため、自動プッシュをスキップします"
+                        echo "$REMOTE_CHECK_OUTPUT"
+                        echo "💡 SSH利用時の確認: 'ssh-add -l' と 'ssh -T git@github.com'"
                         echo "💡 認証設定後に 'git push --set-upstream origin $CURRENT_BRANCH' を実行してください"
                     fi
                 fi

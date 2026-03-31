@@ -12,7 +12,10 @@
       "installDirectlyFromGitHubRelease": true
     }
   },
-  "forwardPorts": [3000, 8000],
+  "forwardPorts": [
+    3000,
+    8000
+  ],
   "portsAttributes": {
     "3000": {
       "label": "OpenCode Web",
@@ -52,8 +55,13 @@
     "AI_HARNESS_ENV": "development",
     "PYTHONPATH": "${containerWorkspaceFolder}/.ai-guidance"
   },
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/tmp/ssh-agent.sock"
+  },
   "mounts": [
     "source=${localWorkspaceFolder}/.ai-guidance,target=${containerWorkspaceFolder}/.ai-guidance,type=bind",
-    "source=ai-harness-cache,target=${containerWorkspaceFolder}/.ai-guidance/cache,type=volume"
+    "source=ai-harness-cache,target=${containerWorkspaceFolder}/.ai-guidance/cache,type=volume",
+    "source=${localEnv:SSH_AUTH_SOCK},target=/tmp/ssh-agent.sock,type=bind",
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly"
   ]
 }
