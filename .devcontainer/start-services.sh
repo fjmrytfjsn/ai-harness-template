@@ -188,16 +188,26 @@ fi
 exec 9>&-
 
 # OpenCode Web の簡易監視（ポートが落ちたら再起動）
+# postAttach のシェル終了後も生き残るように nohup で起動する
 if [ "$OPENCODE_AUTO_START" = "true" ] && [ "$OPENCODE_MONITOR_ENABLED" = "true" ]; then
-    (
+    nohup bash -c '
+        OPENCODE_VERSION="'"$OPENCODE_VERSION"'"
+        OPENCODE_MONITOR_INTERVAL_SECONDS="'"$OPENCODE_MONITOR_INTERVAL_SECONDS"'"
+        OPENCODE_MONITOR_LOG="'"$OPENCODE_MONITOR_LOG"'"
         while true; do
             if ! ss -ltn 2>/dev/null | grep -qE ":3000[[:space:]]"; then
                 echo "[$(date -Is)] OpenCode が停止しているため再起動します" >> "$OPENCODE_MONITOR_LOG"
-                start_opencode_web
+                if command -v opencode >/dev/null 2>&1; then
+                    nohup opencode web --port 3000 >> "$OPENCODE_MONITOR_LOG" 2>&1 &
+                elif command -v opencode-ai >/dev/null 2>&1; then
+                    nohup opencode-ai web --port 3000 >> "$OPENCODE_MONITOR_LOG" 2>&1 &
+                else
+                    nohup npx --yes "opencode-ai@${OPENCODE_VERSION}" web --port 3000 >> "$OPENCODE_MONITOR_LOG" 2>&1 &
+                fi
             fi
             sleep "$OPENCODE_MONITOR_INTERVAL_SECONDS"
         done
-    ) >/dev/null 2>&1 &
+    ' >/dev/null 2>&1 &
 fi
 
 # AI Harness 設定の確認
