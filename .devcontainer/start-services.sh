@@ -39,6 +39,11 @@ wait_for_port() {
     return 1
 }
 
+is_pid_alive() {
+    local pid="$1"
+    [ -n "$pid" ] && ps -p "$pid" >/dev/null 2>&1
+}
+
 start_opencode_web() {
     if command -v opencode >/dev/null 2>&1; then
         # npm install -g opencode-ai が提供する実バイナリは `opencode`
@@ -78,9 +83,20 @@ if [ "$OPENCODE_AUTO_START" = "true" ]; then
         if wait_for_port 3000 "$OPENCODE_STARTUP_TIMEOUT_SECONDS" 1; then
             ACTIVE_OPENCODE_PID="$(get_pid_by_port 3000)"
             [ -z "$ACTIVE_OPENCODE_PID" ] && ACTIVE_OPENCODE_PID="$OPENCODE_PID"
-            echo "$ACTIVE_OPENCODE_PID" > .ai-guidance/opencode.pid
-            echo "✅ OpenCode Web 起動完了 (PID: $ACTIVE_OPENCODE_PID)"
+
+            # 瞬間的にポートが開いただけのケースを避けるため、短時間の安定性を確認
+            sleep 2
+            if is_pid_alive "$ACTIVE_OPENCODE_PID" && ss -ltn 2>/dev/null | grep -qE ":3000[[:space:]]"; then
+                echo "$ACTIVE_OPENCODE_PID" > .ai-guidance/opencode.pid
+                echo "✅ OpenCode Web 起動完了 (PID: $ACTIVE_OPENCODE_PID)"
+            else
+                rm -f .ai-guidance/opencode.pid
+                echo "❌ OpenCode Web は起動直後に停止しました"
+                echo "   ログ: .ai-guidance/logs/opencode.log"
+                exit 1
+            fi
         else
+            rm -f .ai-guidance/opencode.pid
             echo "❌ OpenCode Web の起動に失敗しました"
             echo "   使用バージョン: opencode-ai@$OPENCODE_VERSION"
             echo "   ログ: .ai-guidance/logs/opencode.log"
