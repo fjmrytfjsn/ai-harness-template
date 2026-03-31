@@ -128,11 +128,40 @@ pip install -r .ai-guidance/requirements.txt
 ./.devcontainer/start-services.sh
 ```
 
+### DevContainer で SSH Git 認証ができない
+
+`git@github.com:...` のような SSH URL を使う場合、ホスト側 SSH agent に鍵が読み込まれていないと認証できません。
+
+```bash
+# WSL 側で SSH agent を起動
+eval "$(ssh-agent -s)"
+
+# 鍵を登録
+ssh-add ~/.ssh/id_ed25519
+
+# 鍵登録状態の確認
+ssh-add -l
+```
+
+このテンプレートでは、Dev Container 起動時に `~/.ssh/agent.sock` を自動準備し、コンテナ内の `/tmp/ssh-agent.sock` に橋渡しします。
+認証エラーが続く場合は、次を順に確認してください。
+
+```bash
+# ホスト(WSL)でソケット確認
+test -S ~/.ssh/agent.sock && echo "host socket ok"
+
+# コンテナ内でソケット確認
+test -S /tmp/ssh-agent.sock && echo "container socket ok"
+
+# 接続確認
+ssh -T git@github.com
+```
+
 ## ✅ 正常動作の確認
 
 以下が全て OK なら正常に動作しています：
 
-1. **OpenCode Web アクセス**: http://localhost:3000 でUIが表示される
+1. **OpenCode Web アクセス**: <http://localhost:3000> でUIが表示される
 2. **AI レスポンス**: プロンプト入力でAIからの回答が返る
 3. **AI Harness 統合**: カスタムコマンドが利用可能
 4. **エラーなし**: ブラウザコンソールにエラーが出ない

@@ -28,6 +28,7 @@
       "visibility": "private"
     }
   },
+  "initializeCommand": "bash ${localWorkspaceFolder}/.devcontainer/init-ssh-agent.sh",
   "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/setup.sh",
   "postStartCommand": "bash ${containerWorkspaceFolder}/.devcontainer/start-services.sh",
   "customizations": {
@@ -61,7 +62,7 @@
   "mounts": [
     "source=${localWorkspaceFolder}/.ai-guidance,target=${containerWorkspaceFolder}/.ai-guidance,type=bind",
     "source=ai-harness-cache,target=${containerWorkspaceFolder}/.ai-guidance/cache,type=volume",
-    "source=${localEnv:SSH_AUTH_SOCK},target=/tmp/ssh-agent.sock,type=bind",
+    "source=${localEnv:HOME}/.ssh/agent.sock,target=/tmp/ssh-agent.sock,type=bind",
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,readonly"
   ]
 }
