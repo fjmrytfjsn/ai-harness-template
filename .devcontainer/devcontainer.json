@@ -28,7 +28,7 @@
       "visibility": "private"
     }
   },
-  "initializeCommand": "bash ${localWorkspaceFolder}/.devcontainer/init-ssh-agent.sh",
+  "initializeCommand": "bash ${localWorkspaceFolder}/.devcontainer/init-ssh-agent.sh && bash ${localWorkspaceFolder}/.devcontainer/init-host-env.sh ${localWorkspaceFolder}",
   "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/setup.sh",
   "postAttachCommand": "bash ${containerWorkspaceFolder}/.devcontainer/start-services.sh",
   "customizations": {
