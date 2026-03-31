@@ -2,14 +2,14 @@
 # エージェント = モデル + ハーネス
 
 project:
-  name: "{{PROJECT_NAME}}" # TODO: プロジェクト名に変更してください
+  name: "ai-harness-template" # TODO: プロジェクト名に変更してください
   type: "application" # テンプレートから作成されたプロジェクト
-  description: "{{PROJECT_DESCRIPTION}}" # TODO: プロジェクトの説明を記入してください
+  description: "AI Harness プロジェクト - 次世代AIエージェント基盤" # TODO: プロジェクトの説明を記入してください
 
   # プロジェクト設定（必要に応じて変更）
   version: "1.0.0"
-  authors: ["{{AUTHOR_NAME}}"] # TODO: 作成者名を記入してください
-  repository: "{{REPOSITORY_URL}}" # TODO: リポジトリURLを記入してください
+  authors: ["Developer"] # TODO: 作成者名を記入してください
+  repository: "https://github.com/fjmrytfjsn/ai-harness-template" # TODO: リポジトリURLを記入してください
 
 # ハーネスアーキテクチャ
 harness:
