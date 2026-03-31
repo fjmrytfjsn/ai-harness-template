@@ -9,6 +9,34 @@ set -e
 WORKSPACE_DIR="${CONTAINERWORKSPACEFOLDER:-$(pwd)}"
 cd "$WORKSPACE_DIR"
 
+# 実行時に必要なディレクトリを保証
+mkdir -p .ai-guidance/logs
+mkdir -p .ai-guidance/cache
+mkdir -p .ai-guidance/temp
+
+# デフォルトURL（Codespaces時は上書き）
+OPENCODE_URL="http://localhost:3000"
+DASHBOARD_URL="http://localhost:8000"
+
+get_pid_by_port() {
+    local port="$1"
+    ss -ltnp 2>/dev/null | grep -E ":${port}[[:space:]]" | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | head -n 1
+}
+
+wait_for_port() {
+    local port="$1"
+    local retries="${2:-10}"
+    local delay="${3:-1}"
+    local i
+    for i in $(seq 1 "$retries"); do
+        if ss -ltn 2>/dev/null | grep -qE ":${port}[[:space:]]"; then
+            return 0
+        fi
+        sleep "$delay"
+    done
+    return 1
+}
+
 echo "🚀 AI Harness サービスを起動中..."
 
 # OpenCode Web の起動
@@ -23,13 +51,26 @@ if [ "$OPENCODE_AUTO_START" = "true" ]; then
         OPENCODE_URL="http://localhost:3000"
         DASHBOARD_URL="http://localhost:8000"
     fi
-    
-    # OpenCode Web をバックグラウンドで起動
-    nohup npx opencode-ai@latest web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
-    OPENCODE_PID=$!
-    echo $OPENCODE_PID > .ai-guidance/opencode.pid
-    
-    echo "✅ OpenCode Web 起動完了 (PID: $OPENCODE_PID)"
+
+    EXISTING_OPENCODE_PID="$(get_pid_by_port 3000)"
+    if [ -n "$EXISTING_OPENCODE_PID" ]; then
+        echo "$EXISTING_OPENCODE_PID" > .ai-guidance/opencode.pid
+        echo "✅ OpenCode Web は既に起動済みです (PID: $EXISTING_OPENCODE_PID)"
+    else
+        # OpenCode Web をバックグラウンドで起動
+        nohup npx opencode-ai@latest web --port 3000 > .ai-guidance/logs/opencode.log 2>&1 &
+        OPENCODE_PID=$!
+        if wait_for_port 3000 15 1; then
+            ACTIVE_OPENCODE_PID="$(get_pid_by_port 3000)"
+            [ -z "$ACTIVE_OPENCODE_PID" ] && ACTIVE_OPENCODE_PID="$OPENCODE_PID"
+            echo "$ACTIVE_OPENCODE_PID" > .ai-guidance/opencode.pid
+            echo "✅ OpenCode Web 起動完了 (PID: $ACTIVE_OPENCODE_PID)"
+        else
+            echo "❌ OpenCode Web の起動に失敗しました"
+            echo "   ログ: .ai-guidance/logs/opencode.log"
+            exit 1
+        fi
+    fi
     
 else
     echo "ℹ️  OpenCode Web 自動起動が無効です"
@@ -42,12 +83,26 @@ echo "⬇️  AI Harness Dashboard を起動中..."
 # Python 依存関係確認
 python -c "import aiohttp, aiohttp_cors" 2>/dev/null || pip install --user aiohttp aiohttp-cors
 
-# Dashboard をバックグラウンドで起動
-nohup python .ai-guidance/dashboard.py --host 0.0.0.0 --port 8000 > .ai-guidance/logs/dashboard.log 2>&1 &
-DASHBOARD_PID=$!
-echo $DASHBOARD_PID > .ai-guidance/dashboard.pid
-
-echo "✅ AI Harness Dashboard 起動完了 (PID: $DASHBOARD_PID)"
+# Dashboard が既に起動済みなら再起動しない
+EXISTING_DASHBOARD_PID="$(get_pid_by_port 8000)"
+if [ -n "$EXISTING_DASHBOARD_PID" ]; then
+    echo "$EXISTING_DASHBOARD_PID" > .ai-guidance/dashboard.pid
+    echo "✅ AI Harness Dashboard は既に起動済みです (PID: $EXISTING_DASHBOARD_PID)"
+else
+    # Dashboard をバックグラウンドで起動
+    nohup python .ai-guidance/dashboard.py --host 0.0.0.0 --port 8000 > .ai-guidance/logs/dashboard.log 2>&1 &
+    DASHBOARD_PID=$!
+    if wait_for_port 8000 15 1; then
+        ACTIVE_DASHBOARD_PID="$(get_pid_by_port 8000)"
+        [ -z "$ACTIVE_DASHBOARD_PID" ] && ACTIVE_DASHBOARD_PID="$DASHBOARD_PID"
+        echo "$ACTIVE_DASHBOARD_PID" > .ai-guidance/dashboard.pid
+        echo "✅ AI Harness Dashboard 起動完了 (PID: $ACTIVE_DASHBOARD_PID)"
+    else
+        echo "❌ AI Harness Dashboard の起動に失敗しました"
+        echo "   ログ: .ai-guidance/logs/dashboard.log"
+        exit 1
+    fi
+fi
 
 # AI Harness 設定の確認
 if [ -f ".ai-guidance/harness.yaml" ]; then
