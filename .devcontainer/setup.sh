@@ -35,10 +35,23 @@ mkdir -p .ai-guidance/temp
 # 権限設定
 chmod +x scripts/initialize-project.sh 2>/dev/null || true
 
-# Git 設定（Codespacesで自動設定されない場合の対策）
-if [ -n "$GITHUB_USER" ]; then
-    git config --global user.name "$GITHUB_USER" || true
-    git config --global user.email "$GITHUB_USER@users.noreply.github.com" || true
+# Git 設定（Codespaces/ローカル両対応）
+CURRENT_GIT_NAME="$(git config --get user.name 2>/dev/null || true)"
+CURRENT_GIT_EMAIL="$(git config --get user.email 2>/dev/null || true)"
+
+if [ -z "$CURRENT_GIT_NAME" ] || [ -z "$CURRENT_GIT_EMAIL" ]; then
+    if [ -n "$GITHUB_USER" ]; then
+        FALLBACK_GIT_NAME="$GITHUB_USER"
+        FALLBACK_GIT_EMAIL="$GITHUB_USER@users.noreply.github.com"
+    else
+        FALLBACK_GIT_NAME="Dev Container User"
+        FALLBACK_GIT_EMAIL="devcontainer@local"
+    fi
+
+    # リポジトリローカル設定でフォールバックし、グローバル汚染を避ける
+    git config user.name "$FALLBACK_GIT_NAME" || true
+    git config user.email "$FALLBACK_GIT_EMAIL" || true
+    echo "📝 Git user を自動設定: $FALLBACK_GIT_NAME <$FALLBACK_GIT_EMAIL>"
 fi
 
 echo ""
@@ -55,7 +68,18 @@ if [ -f "./scripts/initialize-project.sh" ]; then
     [ -z "$DEFAULT_PROJECT_NAME" ] && export DEFAULT_PROJECT_NAME="$(basename $PWD)"
     export DEFAULT_AUTHOR_NAME="${GITHUB_USER:-Developer}"
     export DEFAULT_DESCRIPTION="AI Harness プロジェクト - 次世代AIエージェント基盤"
-    export DEFAULT_REPOSITORY_URL="${GITHUB_SERVER_URL:-https://github.com}/${GITHUB_REPOSITORY:-${GITHUB_USER}/$(basename $PWD)}"
+    REPOSITORY_PATH="${GITHUB_REPOSITORY:-}"
+    if [ -z "$REPOSITORY_PATH" ]; then
+        ORIGIN_URL="$(git config --get remote.origin.url 2>/dev/null || true)"
+        if [ -n "$ORIGIN_URL" ]; then
+            REPOSITORY_PATH="$(echo "$ORIGIN_URL" | sed -E 's#(git@|https://)([^/:]+)[:/]([^/]+)/([^/.]+)(\.git)?#\3/\4#')"
+        fi
+    fi
+    REPO_OWNER="${REPOSITORY_PATH%/*}"
+    REPO_NAME="${REPOSITORY_PATH##*/}"
+    [ -z "$REPO_OWNER" ] && REPO_OWNER="${GITHUB_USER:-dev}"
+    [ -z "$REPO_NAME" ] && REPO_NAME="$(basename "$PWD")"
+    export DEFAULT_REPOSITORY_URL="${GITHUB_SERVER_URL:-https://github.com}/$REPO_OWNER/$REPO_NAME"
     
     # 初期化実行（エラー時は警告のみ）
     if bash ./scripts/initialize-project.sh; then

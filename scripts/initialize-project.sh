@@ -8,6 +8,9 @@ set -e
 echo "🚀 AI Harness Template 初期化スクリプト"
 echo "======================================"
 
+COMMIT_CREATED="false"
+PUSH_SUCCEEDED="false"
+
 # 自動初期化モードかどうかの判定
 if [ "$AUTO_INIT_MODE" = "true" ]; then
     echo "🤖 自動初期化モードで実行します..."
@@ -112,7 +115,7 @@ rm -rf .template/ 2>/dev/null
 rm -f scripts/comprehensive-test.sh 2>/dev/null
 rm -f scripts/update-template.sh 2>/dev/null
 rm -f .template-backups/.gitkeep 2>/dev/null
-rmdir .template-backups 2>/dev/null
+rmdir .template-backups 2>/dev/null || true
 # QUICK_FIX.md は初回プロバイダー設定まで保持
 
 echo "✅ テンプレート固有ファイル削除完了"
@@ -121,29 +124,47 @@ echo "✅ テンプレート固有ファイル削除完了"
 if [ -d ".git" ]; then
     echo "📝 プロジェクト初期化をコミット中..."
     git add .
-    git commit -m "🚀 Initialize project from AI Harness Template
+    if COMMIT_OUTPUT=$(git commit -m "🚀 Initialize project from AI Harness Template
 
 - プロジェクト名: ${PROJECT_NAME:-'New Project'}
 - テンプレート固有ファイル削除完了
 - プロダクション準備完了
 
 From: AI Harness Template
-Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" -q
-    
-    if [ $? -eq 0 ]; then
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" 2>&1); then
+        COMMIT_CREATED="true"
         echo "✅ プロジェクト初期化がコミットされました"
-        
+    else
+        if echo "$COMMIT_OUTPUT" | grep -qi "nothing to commit"; then
+            echo "⚠️  コミットをスキップ（変更なし）"
+        else
+            echo "⚠️  コミットに失敗しました"
+            echo "$COMMIT_OUTPUT"
+        fi
+    fi
+    
+    if [ "$COMMIT_CREATED" = "true" ]; then
         # リモートリポジトリがある場合はプッシュを提案
         if git remote get-url origin >/dev/null 2>&1; then
             if [ "$AUTO_INIT_MODE" = "true" ]; then
                 echo "📤 リモートリポジトリにプッシュ中..."
-                git push -q && echo "✅ リモートにプッシュ完了" || echo "⚠️  プッシュに失敗（手動で git push してください）"
+                CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")"
+                if [ -z "$CURRENT_BRANCH" ]; then
+                    echo "⚠️  現在のブランチ名を取得できず、プッシュをスキップしました"
+                else
+                    if PUSH_OUTPUT=$(git push --set-upstream origin "$CURRENT_BRANCH" 2>&1); then
+                        PUSH_SUCCEEDED="true"
+                        echo "✅ リモートにプッシュ完了"
+                    else
+                        echo "⚠️  プッシュに失敗しました（原因を表示します）"
+                        echo "$PUSH_OUTPUT"
+                        echo "💡 認証設定後に 'git push --set-upstream origin $CURRENT_BRANCH' を実行してください"
+                    fi
+                fi
             else
                 echo "💡 ヒント: git push でリモートリポジトリに変更をプッシュできます"
             fi
         fi
-    else
-        echo "⚠️  コミットをスキップ（変更なし、または git 未初期化）"
     fi
 else
     echo "⚠️  Git リポジトリが初期化されていません"
@@ -156,7 +177,13 @@ if [ "$AUTO_INIT_MODE" = "true" ]; then
     echo "🎉 セットアップ完了:"
     echo "   ✅ プロジェクト設定済み"
     echo "   ✅ テンプレート固有ファイル削除済み"
-    echo "   ✅ 変更をコミット・プッシュ済み"
+    if [ "$COMMIT_CREATED" = "true" ] && [ "$PUSH_SUCCEEDED" = "true" ]; then
+        echo "   ✅ 変更をコミット・プッシュ済み"
+    elif [ "$COMMIT_CREATED" = "true" ]; then
+        echo "   ⚠️  変更はコミット済み（プッシュ未完了）"
+    else
+        echo "   ⚠️  変更は未コミット（または変更なし）"
+    fi
     echo "   ⚠️  AI プロバイダー未設定"
     echo ""
     echo "📱 利用開始前の設定:"
