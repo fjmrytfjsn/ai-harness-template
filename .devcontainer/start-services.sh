@@ -23,6 +23,20 @@ if [ ! -f ".env" ] && [ -f ".env.example" ]; then
     cp .env.example .env
 fi
 
+# .tailscale_authKey があれば .env に反映
+if [ -f ".tailscale_authKey" ]; then
+    TS_AUTHKEY_FROM_FILE="$(head -n 1 .tailscale_authKey | tr -d '\r\n')"
+    if [ -n "$TS_AUTHKEY_FROM_FILE" ]; then
+        if [ -f ".env" ]; then
+            if grep -q '^TS_AUTHKEY=' .env; then
+                sed -i "s/^TS_AUTHKEY=.*/TS_AUTHKEY=${TS_AUTHKEY_FROM_FILE}/" .env
+            else
+                printf '\nTS_AUTHKEY=%s\n' "$TS_AUTHKEY_FROM_FILE" >> .env
+            fi
+        fi
+    fi
+fi
+
 # .env があれば読み込んで環境変数として展開
 if [ -f ".env" ]; then
     set -a
@@ -128,10 +142,13 @@ if command -v tailscaled >/dev/null 2>&1; then
     fi
 
     if [ -n "${TS_AUTHKEY:-}" ]; then
-        sudo -n tailscale --socket="$TS_SOCKET" up --authkey "$TS_AUTHKEY" --hostname "$TS_HOSTNAME" --accept-dns=false || true
+        if ! sudo -n tailscale --socket="$TS_SOCKET" up --authkey "$TS_AUTHKEY" --hostname "$TS_HOSTNAME" --accept-dns=false; then
+            echo "⚠️  Tailscale のセットアップに失敗しました"
+            echo "   ログ: $TS_LOG"
+        fi
     else
-        echo "ℹ️  TS_AUTHKEY が未設定のため Tailscale 参加をスキップします"
-        echo "   参加するには: export TS_AUTHKEY=tskey-... を設定して再起動してください"
+        echo "⚠️  TS_AUTHKEY が未設定のため Tailscale 参加をスキップします"
+        echo "   .env または .tailscale_authKey にキーを設定して再起動してください"
     fi
 fi
 

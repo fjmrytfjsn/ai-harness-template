@@ -13,7 +13,14 @@ if [ ! -f ".env" ]; then
     fi
 fi
 
-read -r -p "TS_AUTHKEY を入力してください: " TS_AUTHKEY
+if [ -f ".tailscale_authKey" ]; then
+    TS_AUTHKEY="$(head -n 1 .tailscale_authKey | tr -d '\r\n')"
+fi
+
+if [ -z "${TS_AUTHKEY:-}" ]; then
+    read -r -p "TS_AUTHKEY を入力してください: " TS_AUTHKEY
+fi
+
 if [ -z "$TS_AUTHKEY" ]; then
     echo "TS_AUTHKEY が空のため中止します"
     exit 1
